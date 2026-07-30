@@ -3,11 +3,72 @@ from rembg import remove
 from PIL import Image, ImageOps
 import cv2
 import numpy as np
+import csv
+import os
 import io
 
 app = Flask(__name__)
 
 DPI = 300   # print quality
+
+def save_features(features):
+    filename = "image_features.csv"
+
+    file_exists = os.path.isfile(filename)
+
+    with open(filename, "a", newline="") as file:
+        writer = csv.writer(file)
+
+        if not file_exists:
+            writer.writerow([
+                "Brightness",
+                "Contrast",
+                "Sharpness",
+                "Noise"
+            ])
+
+        writer.writerow([
+            features["brightness"],
+            features["contrast"],
+            features["sharpness"],
+            features["noise"]
+        ])
+
+# function for getting the brigthness level of image
+def get_brightness(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    return round(np.mean(gray), 2 )
+
+def get_contrast(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    return  round(gray.std(), 2)
+
+def get_sharpness(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    return round(cv2.Laplacian(gray, cv2.CV_64F).var(), 2)
+
+def get_noise(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (3,3), 0)
+    return round(np.mean(cv2.absdiff(gray, blur)),2 )
+
+def analyze_image(img):
+    return {
+        "brightness": get_brightness(img),
+        "contrast": get_contrast(img),
+        "sharpness": get_sharpness(img),
+        "noise": get_noise(img)
+    }
+
+def fuzzy_logic(features):
+    # dito ilalagay ang fuzzy computation
+    return {
+        "alpha": 1.08,
+        "beta": 5,
+        "sharpen": 2.4,
+        "denoise": 3
+    }
+
 
 # PHOTO CONFIGURATION (actual print size @300dpi)
 PHOTO_TYPES = {
@@ -247,26 +308,30 @@ def enhance():
     np_img = np.frombuffer(file, np.uint8)
 
     img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
-
     if img is None:
         return "Invalid image", 400
+
+    features = analyze_image(img)
+    print("FEATURES:", features, flush=True)
+    save_features(features)
+    decision = fuzzy_logic(features)
 
     # very light denoise (less plastic/cartoon effect)
     denoised = cv2.fastNlMeansDenoisingColored(
         img,
         None,
-        2,      # lower
-        2,
+        decision["denoise"],
+        decision["denoise"],
         7,
         21
-    )
+        )
 
     # gentle sharpening
     kernel = np.array([
-        [0, -0.3, 0],
-        [-0.3, 2.2, -0.3],
-        [0, -0.3, 0]
-    ])
+    [0, -0.3, 0],
+    [-0.3, decision["sharpen"], -0.3],
+    [0, -0.3, 0]]
+    )
 
     sharpened = cv2.filter2D(
         denoised,
@@ -276,10 +341,10 @@ def enhance():
 
     # slight contrast adjustment only
     enhanced = cv2.convertScaleAbs(
-        sharpened,
-        alpha=1.03,
-        beta=2
-    )
+    sharpened,
+    alpha=decision["alpha"],
+    beta=decision["beta"]
+)
 
     # preserve DPI
     img_rgb = cv2.cvtColor(enhanced, cv2.COLOR_BGR2RGB)
@@ -299,8 +364,6 @@ def enhance():
         output,
         mimetype="image/png"
     )
-
-
 
 # ==========================
 # RUN APP
