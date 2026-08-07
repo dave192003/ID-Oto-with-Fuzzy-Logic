@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="fuzzy-analysis.css">
+    <title>Fuzzy Logic Analysis - ID-Oto</title>
+</head>
+
+<body>
+    <main class="analysis-main">
+        <!-- NAVIGATION BAR -->
+        <nav class="navBar-container">
+            <h2>ID-Oto</h2>
+            <div class="nav-box">
+                <ul>
+                    <li><a href="landing-page.html">Home</a></li>
+                    <li>Fuzzy Analysis</li>
+                    <li>About</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- PAGE HEADER -->
+        <header class="analysis-header">
+            <h1>Fuzzy Logic Analysis</h1>
+            <p>Visualize the Mamdani Fuzzy Inference System pipeline for image enhancement</p>
+        </header>
+
+        <!-- UPLOAD SECTION -->
+        <section class="analysis-upload" id="analysisUpload">
+            <label for="analysisImageInput" class="analysis-upload-card">
+                <div class="analysis-upload-icon">📷</div>
+                <h2>Upload Image for Analysis</h2>
+                <p>Upload a photo to see the fuzzy logic enhancement pipeline in action</p>
+                <span class="analysis-choose-btn">Choose Image</span>
+            </label>
+            <input type="file" id="analysisImageInput" accept="image/png, image/jpeg, image/jpg" hidden>
+        </section>
+
+        <!-- ANALYSIS CONTENT (hidden until image is processed) -->
+        <section class="analysis-content" id="analysisContent">
+            <!-- Loading indicator -->
+            <div class="analysis-loading" id="analysisLoading">
+                <div class="spinner"></div>
+                <p>Running fuzzy inference pipeline...</p>
+            </div>
+
+            <!-- Error message -->
+            <div class="analysis-error" id="analysisError" hidden>
+                <p>Error processing image. Please try again.</p>
+            </div>
+
+            <!-- IMAGE COMPARISON -->
+            <section class="analysis-section">
+                <h2 class="section-title">Image Comparison</h2>
+                <div class="image-comparison-grid">
+                    <div class="comparison-card">
+                        <h3>Original Image</h3>
+                        <div class="image-container">
+                            <img id="analysisOriginalImage" alt="Original Image">
+                        </div>
+                    </div>
+                    <div class="comparison-card">
+                        <h3>Processed Image</h3>
+                        <div class="image-container">
+                            <img id="analysisProcessedImage" alt="Processed Image">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IMAGE STATISTICS -->
+            <section class="analysis-section">
+                <h2 class="section-title">Image Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <h3>Original Image Statistics</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">Brightness</span>
+                            <span class="stat-value" id="origBrightness">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Contrast</span>
+                            <span class="stat-value" id="origContrast">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Sharpness</span>
+                            <span class="stat-value" id="origSharpness">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Noise</span>
+                            <span class="stat-value" id="origNoise">-</span>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <h3>Processed Image Statistics</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">Brightness</span>
+                            <span class="stat-value" id="procBrightness">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Contrast</span>
+                            <span class="stat-value" id="procContrast">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Sharpness</span>
+                            <span class="stat-value" id="procSharpness">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Noise</span>
+                            <span class="stat-value" id="procNoise">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ENHANCEMENT PARAMETERS -->
+            <section class="analysis-section">
+                <h2 class="section-title">Enhancement Parameters</h2>
+                <div class="params-grid">
+                    <div class="param-card">
+                        <h3>Alpha (Contrast)</h3>
+                        <div class="param-value" id="paramAlpha">-</div>
+                        <p class="param-desc">Multiplier applied to pixel values to adjust contrast. Values above 1.0 increase contrast.</p>
+                    </div>
+                    <div class="param-card">
+                        <h3>Beta (Brightness)</h3>
+                        <div class="param-value" id="paramBeta">-</div>
+                        <p class="param-desc">Offset added to pixel values to adjust brightness. Positive values brighten the image.</p>
+                    </div>
+                    <div class="param-card">
+                        <h3>Sharpen Amount</h3>
+                        <div class="param-value" id="paramSharpen">-</div>
+                        <p class="param-desc">Weight of the sharpening kernel. Higher values produce stronger edge enhancement.</p>
+                    </div>
+                    <div class="param-card">
+                        <h3>Denoise Amount</h3>
+                        <div class="param-value" id="paramDenoise">-</div>
+                        <p class="param-desc">Strength of the noise reduction filter. Higher values remove more noise.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- APPLIED FUZZY RULES -->
+            <section class="analysis-section">
+                <h2 class="section-title">Applied Fuzzy Rules</h2>
+                <div class="rules-container" id="rulesContainer">
+                    <p class="no-rules">No rules fired.</p>
+                </div>
+            </section>
+
+            <!-- COMPARISON TABLE -->
+            <section class="analysis-section">
+                <h2 class="section-title">Before vs After Comparison</h2>
+                <div class="comparison-table-container">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Original</th>
+                                <th>Processed</th>
+                                <th>Change</th>
+                                <th>% Change</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparisonTableBody">
+                            <tr>
+                                <td>Brightness</td>
+                                <td id="cmpOrigBrightness">-</td>
+                                <td id="cmpProcBrightness">-</td>
+                                <td id="cmpChangeBrightness">-</td>
+                                <td id="cmpPctBrightness">-</td>
+                            </tr>
+                            <tr>
+                                <td>Contrast</td>
+                                <td id="cmpOrigContrast">-</td>
+                                <td id="cmpProcContrast">-</td>
+                                <td id="cmpChangeContrast">-</td>
+                                <td id="cmpPctContrast">-</td>
+                            </tr>
+                            <tr>
+                                <td>Sharpness</td>
+                                <td id="cmpOrigSharpness">-</td>
+                                <td id="cmpProcSharpness">-</td>
+                                <td id="cmpChangeSharpness">-</td>
+                                <td id="cmpPctSharpness">-</td>
+                            </tr>
+                            <tr>
+                                <td>Noise</td>
+                                <td id="cmpOrigNoise">-</td>
+                                <td id="cmpProcNoise">-</td>
+                                <td id="cmpChangeNoise">-</td>
+                                <td id="cmpPctNoise">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer-container">
+            <p>&copy; 2026 Dave Daryl Lebico. All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <script type="module" src="fuzzy-analysis.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+flask
+flask-cors
+rembg
+pillow
+numpy
+opencv-python-headless==4.10.0.84
+onnxruntime
+pandas
