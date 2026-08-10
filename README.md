@@ -68,28 +68,6 @@ Image Enhancement
 Processed Image
 ```
 
-## API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Health check |
-| `/health` | GET | JSON health status |
-| `/api/process` | POST | Complete ID photo pipeline (background removal, enhancement, cropping) |
-| `/api/analyze` | POST | Full fuzzy logic analysis (features, parameters, rules) |
-| `/api/remove-bg` | POST | Remove image background |
-| `/api/id-crop` | POST | Crop to ID photo size |
-
-### POST /api/process
-
-Accepts `multipart/form-data`:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `image` | file | The uploaded image (JPG, PNG, JPEG) |
-| `type` | string | ID photo size: `1x1`, `1.5x1.5`, `2x2`, `passport` |
-
-Returns the processed image as `image/png`.
-
 ## Fuzzy Logic Analysis Page
 
 The `fuzzy-analysis.html` page provides a complete visualization of the fuzzy inference pipeline:
