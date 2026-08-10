@@ -1,35 +1,31 @@
-
+# Alpha - contrast adjustment
 ALPHA = {
-    "low": (0.7, 0.8, 1.0),
-    "normal": (0.8, 1.0, 1.2),
-    "high": (1.0, 1.2, 1.3)
+    "low": (0.85, 0.85, 1.0),
+    "normal": (0.9, 1.0, 1.1),
+    "high": (1.0, 1.1, 1.15)
 }
 
 
-# beta (Brightness adjustment)
-# Negative = darker, Positive = brighter
-
+# Beta - brightness adjustment
+# High brightness → Low beta → darker image
 BETA = {
-    "low": (-30, -20, 0),
-    "normal": (-20, 0, 20),
-    "high": (0, 20, 30)
+    "low": (-50, -50, 0),
+    "normal": (-50, 0, 10),
+    "high": (9, 11, 12)
 }
 
 
-# Sharpen amount
-# 0 = no sharpening, higher values = stronger sharpening
-
+# Sharpen amount - controlled
 SHARPEN = {
-    "low": (0, 0, 0.3),
-    "medium": (0.2, 0.5, 0.8),
-    "high": (0.7, 1.0, 1.2)
+    "low": (0.0, 0.0, 0.20),
+    "medium": (0.15, 0.25, 0.35),
+    "high": (0.30, 0.40, 0.50)
 }
 
-# Denoise strength
-# Higher values remove more noise
 
+# Denoise amount - stronger
 DENOISE = {
-    "low": (0, 0, 1.5),
-    "medium": (1, 2.5, 4),
-    "high": (3, 5, 6)
+    "low": (0, 0, 2.0),
+    "medium": (2.5, 3.2, 4.0),
+    "high": (4.0, 5.0, 6.0)
 }

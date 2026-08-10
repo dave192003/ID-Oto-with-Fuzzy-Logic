@@ -1,517 +1,173 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>ID Photo Processor</title>
-
 </head>
-
-
 <body>
-
     <main>
 
-
-        <!-- =====================================================
-             NAVIGATION
-        ====================================================== -->
-
+        <!-- ######### Navigation ######### -->
         <nav class="navBar-container">
-
             <h2>ID-Oto</h2>
-
             <div class="nav-box">
-
                 <ul>
-
                     <li>Feature</li>
-
                     <li>How it Works</li>
-
-                    <li>
-                        <a href="fuzzy-analysis.html">
-                            Fuzzy Analysis
-                        </a>
-                    </li>
-
+                    <li><a href="fuzzy-analysis.html">Fuzzy Analysis</a></li>
                     <li>About</li>
-
                     <li>Contact</li>
-
                 </ul>
-
             </div>
-
         </nav>
 
-
-        <!-- =====================================================
-             LEFT SECTION
-        ====================================================== -->
-
+        <!-- ######### Left Section ######### -->
         <section class="left-section">
 
-
-            <!-- =================================================
-                 HEADER
-            ================================================== -->
-
+            <!-- ######### Header ######### -->
             <header class="header-container">
-
                 <div class="top-header-container">
-
                     <ul>
-
                         <li>AI Powered</li>
-
                         <li>Fast</li>
-
                         <li>Easy to Use</li>
-
                     </ul>
-
                 </div>
-
-
-                <h1 class="name-header">
-                    ID-Oto
-                </h1>
-
-
-                <h2>
-                    Automated ID Photo Processor
-                </h2>
-
-
+                <h1 class="name-header">ID-Oto</h1>
+                <h2>Automated ID Photo Processor</h2>
                 <h3>
-
                     MAKE Your Printing ID Service
-
-                    <span class="easier">
-                        EASIER
-                    </span>
-
+                    <span class="easier">EASIER</span>
                 </h3>
-
-
                 <div class="info-header">
-
                     <p>
-
-                        Upload a photo and let ID-Oto
-                        automatically remove the background,
+                        Upload a photo and let ID-Oto automatically remove the background,
                         crop, and generate ID photos for you.
-
                     </p>
-
                 </div>
-
             </header>
 
-
-            <!-- =================================================
-                 UPLOAD AREA
-            ================================================== -->
-
-            <div
-                class="upload-area"
-                id="uploadArea"
-            >
-
-                <label
-                    for="imageInput"
-                    class="upload-card"
-                    id="file-input"
-                >
-
+            <!-- ######### Upload Area ######### -->
+            <div class="upload-area" id="uploadArea">
+                <label for="imageInput" class="upload-card" id="file-input">
                     <div class="upload-icon">
-
-                        <img
-                            src="resources/images/image-.png"
-                            alt="Upload Icon"
-                        >
-
+                        <img src="resources/images/image-.png" alt="Upload Icon">
                     </div>
-
-
-                    <h2>
-                        Upload Your Photo
-                    </h2>
-
-
-                    <p class="upload-description">
-
-                        Drag &amp; drop or click to upload
-
-                    </p>
-
-
-                    <span class="choose-file-btn">
-
-                        Choose File
-
-                    </span>
-
-
-                    <p class="file-info">
-
-                        JPG, PNG or JPEG • Max size 10MB
-
-                    </p>
-
+                    <h2>Upload Your Photo</h2>
+                    <p class="upload-description">Drag &amp; drop or click to upload</p>
+                    <span class="choose-file-btn">Choose File</span>
+                    <p class="file-info">JPG, PNG or JPEG • Max size 10MB</p>
                 </label>
-
-
-                <!-- FILE INPUT -->
-
                 <input
                     type="file"
                     id="imageInput"
                     accept="image/png,image/jpeg,image/jpg"
                     hidden
                 >
-
             </div>
 
+            <!-- ######### Preview Container ######### -->
+            <section class="container" id="previewContainer">
 
-            <!-- =================================================
-                 PREVIEW CONTAINER
-            ================================================== -->
-
-            <section
-                class="container"
-                id="previewContainer"
-            >
-
-
-                <!-- =================================================
-                     IMAGE PREVIEW
-                ================================================== -->
-
+                <!-- ######### Image Preview ######### -->
                 <div class="preview-section">
-
-
-                    <!-- ORIGINAL -->
-
                     <div class="card">
-
-                        <h3>
-                            Original
-                        </h3>
-
-
+                        <h3>Original</h3>
                         <img
                             class="preview-image"
                             id="originalPreview"
                             alt="Original image preview"
                         >
-
                     </div>
-
-
-                    <!-- PROCESSED -->
-
                     <div class="card">
-
-                        <h3>
-                            Processed
-                        </h3>
-
-
+                        <h3>Processed</h3>
                         <img
                             class="output-preview-image"
                             id="outputPreview"
                             alt="Processed image preview"
                             style="display: none;"
                         >
-
                     </div>
-
                 </div>
 
+                <!-- ######### Print Sheet ######### -->
+                <div id="printSheet" class="print-sheet"></div>
 
-                <!-- =================================================
-                     PRINT SHEET
-                ================================================== -->
-
-                <div
-                    id="printSheet"
-                    class="print-sheet"
-                ></div>
-
-
-                <!-- =================================================
-                     SIZE SELECTOR
-                ================================================== -->
-
+                <!-- ######### Size Selector ######### -->
                 <div class="size-selector">
-
-                    <label for="photoSize">
-
-                        Select ID Size
-
-                    </label>
-
-
+                    <label for="photoSize">Select ID Size</label>
                     <select id="photoSize">
-
-                        <option value="1x1">
-                            1x1
-                        </option>
-
-                        <option value="1.5x1.5">
-                            1.5 x 1.5
-                        </option>
-
-                        <option value="2x2">
-                            2x2
-                        </option>
-
-                        <option value="passport">
-                            Passport
-                        </option>
-
+                        <option value="1x1">1x1</option>
+                        <option value="1.5x1.5">1.5 x 1.5</option>
+                        <option value="2x2">2x2</option>
+                        <option value="passport">Passport</option>
                     </select>
-
                 </div>
 
-
-                <!-- =================================================
-                     BUTTONS
-                ================================================== -->
-
+                <!-- ######### Buttons ######### -->
                 <div class="buttons">
-
-
-                    <button
-                        type="button"
-                        class="process"
-                        id="process-button"
-                    >
-                        Process Image
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="download"
-                        id="download-button"
-                    >
-                        Download
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="print-button"
-                        id="print-button"
-                    >
-                        Print Photos
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="fuzzy-analysis-btn"
-                        id="fuzzy-analysis-button"
-                    >
-                        View Fuzzy Analysis
-                    </button>
-
+                    <button type="button" class="process" id="process-button">Process Image</button>
+                    <button type="button" class="download" id="download-button">Download</button>
+                    <button type="button" class="print-button" id="print-button">Print Photos</button>
+                    <button type="button" class="fuzzy-analysis-btn" id="fuzzy-analysis-button">View Fuzzy Analysis</button>
                 </div>
 
-
-                <!-- STATUS -->
-
-                <div
-                    class="loading"
-                    id="status"
-                ></div>
-
-
+                <!-- ######### Status ######### -->
+                <div class="loading" id="status"></div>
             </section>
 
-
-            <!-- =================================================
-                 PRIVACY
-            ================================================== -->
-
+            <!-- ######### Privacy ######### -->
             <div class="privacy-info-container">
-
-                <img
-                    src="resources/images/padlock.png"
-                    alt="Privacy"
-                >
-
-
-                <p>
-
-                    Your photos are secure and private.
-                    They are not stored.
-
-                </p>
-
+                <img src="resources/images/padlock.png" alt="Privacy">
+                <p>Your photos are secure and private. They are not stored.</p>
             </div>
-
-
         </section>
 
-
-        <!-- =====================================================
-             RIGHT SECTION
-        ====================================================== -->
-
+        <!-- ######### Right Section ######### -->
         <section class="right-section">
-
             <div class="hero-image-container">
-
-
-                <img
-                    src="resources/images/images (1).jpg"
-                    class="image1"
-                    alt="Original photo"
-                >
-
-
-                <img
-                    src="resources/images/arrow.png"
-                    class="arrow"
-                    alt="Arrow"
-                >
-
-
-                <img
-                    src="resources/images/id-photo (4).png"
-                    class="image2"
-                    alt="ID photo"
-                >
-
+                <img src="resources/images/images (1).jpg" class="image1" alt="Original photo">
+                <img src="resources/images/arrow.png" class="arrow" alt="Arrow">
+                <img src="resources/images/id-photo (4).png" class="image2" alt="ID photo">
             </div>
-
         </section>
 
-
-        <!-- =====================================================
-             FEATURES
-        ====================================================== -->
-
+        <!-- ######### Features ######### -->
         <section class="feature-info-section">
-
-
             <div class="box">
-
-                <img
-                    src="resources/images/magic-wand.png"
-                    alt="Background removal"
-                >
-
-                <h3>
-                    Auto Background Removal
-                </h3>
-
+                <img src="resources/images/magic-wand.png" alt="Background removal">
+                <h3>Auto Background Removal</h3>
             </div>
-
-
             <div class="box">
-
-                <img
-                    src="resources/images/crop.png"
-                    alt="Cropping"
-                >
-
-                <h3>
-                    Smart Cropping
-                </h3>
-
+                <img src="resources/images/crop.png" alt="Cropping">
+                <h3>Smart Cropping</h3>
             </div>
-
-
             <div class="box">
-
-                <img
-                    src="resources/images/magic.png"
-                    alt="Enhancement"
-                >
-
-                <h3>
-                    Auto Enhance
-                </h3>
-
+                <img src="resources/images/magic.png" alt="Enhancement">
+                <h3>Auto Enhance</h3>
             </div>
-
-
             <div class="box">
-
-                <img
-                    src="resources/images/dashboard.png"
-                    alt="Layout"
-                >
-
-                <h3>
-                    Auto Layout
-                </h3>
-
+                <img src="resources/images/dashboard.png" alt="Layout">
+                <h3>Auto Layout</h3>
             </div>
-
-
             <div class="box">
-
-                <img
-                    src="resources/images/printer.png"
-                    alt="Printing"
-                >
-
-                <h3>
-                    Print Ready
-                </h3>
-
+                <img src="resources/images/printer.png" alt="Printing">
+                <h3>Print Ready</h3>
             </div>
-
         </section>
 
-
-        <!-- =====================================================
-             FOOTER
-        ====================================================== -->
-
+        <!-- ######### Footer ######### -->
         <footer class="footer-container">
-
-            <p>
-
-                &copy; 2026 Dave Daryl Lebico.
-                All Rights Reserved.
-
-            </p>
-
+            <p>&copy; 2026 Dave Daryl Lebico. All Rights Reserved.</p>
         </footer>
-
 
     </main>
 
-
-    <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
-
-    <script
-        type="module"
-        src="script.js"
-    ></script>
-
-
+    <!-- ######### JavaScript ######### -->
+    <script type="module" src="script.js"></script>
 </body>
-
 </html>
+```

@@ -84,16 +84,18 @@ def enhance_image(img, parameters):
     )
 
     # Use stable sharpening kernel
+    sharpen_strength = float(parameters["sharpen"])
+
     kernel = np.array([
-        [0, -1, 0],
-        [-1, 5, -1],
-        [0, -1, 0]
+    [0, -sharpen_strength, 0],
+    [-sharpen_strength, 1 + (4 * sharpen_strength), -sharpen_strength],
+    [0, -sharpen_strength, 0]
     ], dtype=np.float32)
 
     sharpened = cv2.filter2D(
-        denoised,
-        -1,
-        kernel
+    denoised,
+    -1,
+    kernel
     )
 
     enhanced = cv2.convertScaleAbs(
