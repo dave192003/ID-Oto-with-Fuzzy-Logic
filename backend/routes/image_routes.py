@@ -19,15 +19,15 @@ def process_id_photo(image, photo_type):
     image = validate_image(image)
     print("[BACKEND] Image validated", flush=True)
 
+     #  Analyze image
+    print("[BACKEND] Analyzing image", flush=True)
+    features = analyze_image(image)
+    print(f"[BACKEND] Image analyzed: {features}", flush=True)
+    
     # Remove background
     print("[BACKEND] Removing background", flush=True)
     image = remove_background(image)
     print("[BACKEND] Background removed", flush=True)
-
-    #  Analyze image
-    print("[BACKEND] Analyzing image", flush=True)
-    features = analyze_image(image)
-    print(f"[BACKEND] Image analyzed: {features}", flush=True)
 
     # Apply fuzzy enhancement
     print("[BACKEND] Applying fuzzy enhancement", flush=True)
