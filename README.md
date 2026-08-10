@@ -43,51 +43,6 @@ No n8n dependency. The Flask backend handles the complete image processing pipel
 6. **Print Ready Output**
    * Final output is generated and prepared for printing.
 
-## Project Structure
-
-```
-ID-Oto/
-│
-├── frontend/
-│   ├── landing-page.html      # Main ID photo processor page
-│   ├── fuzzy-analysis.html    # Fuzzy logic analysis visualization page
-│   ├── script.js              # Main page logic
-│   ├── fuzzy-analysis.js      # Fuzzy analysis page logic
-│   ├── style.css              # Main styles
-│   ├── fuzzy-analysis.css     # Fuzzy analysis page styles
-│   ├── js/
-│   │   └── api.js             # API service layer (Flask backend)
-│   ├── Dockerfile             # Nginx container for frontend
-│   └── resources/
-│       └── images/            # Static images
-│
-├── backend/
-│   ├── app.py                 # Flask application entry point
-│   ├── routes/
-│   │   ├── image_routes.py    # Image processing API routes
-│   │   └── analysis_routes.py # Fuzzy analysis API routes
-│   ├── services/
-│   │   ├── background_removal.py  # Background removal service
-│   │   ├── image_analysis.py      # Image feature extraction
-│   │   ├── fuzzy_enhancement.py   # Fuzzy logic enhancement
-│   │   ├── cropping.py            # ID photo cropping service
-│   │   └── print_layout.py        # Print layout generation
-│   ├── fuzzy_logic/
-│   │   ├── __init__.py
-│   │   ├── membership.py          # Triangular membership functions
-│   │   ├── memberships.py         # Input membership definitions
-│   │   ├── output_membership.py   # Output membership definitions
-│   │   ├── rules.py               # Fuzzy rule base and evaluation
-│   │   ├── inference.py           # Mamdani inference pipeline
-│   │   └── defuzzification.py     # Centroid defuzzification
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   └── image_utils.py         # Image utility functions
-│   ├── Dockerfile
-│   └── requirements.txt
-│
-└── docker-compose.yml
-```
 
 ## Fuzzy Logic Pipeline
 
@@ -112,28 +67,6 @@ Image Enhancement
   ↓
 Processed Image
 ```
-
-## API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Health check |
-| `/health` | GET | JSON health status |
-| `/api/process` | POST | Complete ID photo pipeline (background removal, enhancement, cropping) |
-| `/api/analyze` | POST | Full fuzzy logic analysis (features, parameters, rules) |
-| `/api/remove-bg` | POST | Remove image background |
-| `/api/id-crop` | POST | Crop to ID photo size |
-
-### POST /api/process
-
-Accepts `multipart/form-data`:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `image` | file | The uploaded image (JPG, PNG, JPEG) |
-| `type` | string | ID photo size: `1x1`, `1.5x1.5`, `2x2`, `passport` |
-
-Returns the processed image as `image/png`.
 
 ## Fuzzy Logic Analysis Page
 
