@@ -1,32 +1,10 @@
-/**
- * API service layer for the ID-Oto frontend.
- * All requests go directly to the Flask backend.
- */
-
-// Flask Backend URL
 const API_BASE_URL = "http://localhost:8000/api";
-
-/**
- * Process the complete ID photo pipeline.
- * The Flask backend will:
- * 1. Validate Image
- * 2. Remove Background
- * 3. Analyze Image
- * 4. Apply Fuzzy Logic
- * 5. Crop to Selected Size
- * 6. Return Processed Image
- */
 export async function enhanceImage(file, type = "2x2") {
-
     console.log("[FRONTEND] Processing started");
-
     const formData = new FormData();
-
     formData.append("image", file);
     formData.append("type", type);
-
     console.log("[FRONTEND] API request sent");
-
     const response = await fetch(`${API_BASE_URL}/process`, {
         method: "POST",
         body: formData
@@ -46,7 +24,7 @@ export async function enhanceImage(file, type = "2x2") {
                 errorMessage = errorData.error;
             }
         } catch (e) {
-            // Not JSON, use default message
+            // Not JSON, using the default message
         }
 
         throw new Error(errorMessage);
@@ -60,10 +38,7 @@ export async function enhanceImage(file, type = "2x2") {
 
     return blob;
 }
-
-/**
- * Get fuzzy logic analysis.
- */
+// Get the image features
 export async function analyzeImage(file) {
     const formData = new FormData();
     formData.append("image", file);
@@ -75,15 +50,13 @@ export async function analyzeImage(file) {
 
     if (!response.ok) {
         let errorMessage = `Analysis failed: ${response.status}`;
-
         try {
             const errorData = await response.json();
             if (errorData && errorData.error) {
                 errorMessage = errorData.error;
             }
-        } catch (e) {
-            // Not JSON, use default message
-        }
+        } catch (e) {// Not JSON, use default message/
+            }
 
         throw new Error(errorMessage);
     }
@@ -91,9 +64,7 @@ export async function analyzeImage(file) {
     return await response.json();
 }
 
-/**
- * Remove Background only.
- */
+// Remove the background
 export async function removeBackground(file) {
     const formData = new FormData();
     formData.append("image", file);
@@ -121,9 +92,7 @@ export async function removeBackground(file) {
     return await response.blob();
 }
 
-/**
- * Crop only.
- */
+// Crop the image
 export async function cropIdPhoto(file, type) {
     const formData = new FormData();
 

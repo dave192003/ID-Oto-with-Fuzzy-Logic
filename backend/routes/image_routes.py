@@ -1,14 +1,4 @@
-"""
-Route handlers for image processing endpoints.
-
-The primary endpoint is POST /api/process which runs the
-complete ID photo pipeline:
-    Upload -> Validate -> Remove Background -> Analyze ->
-    Fuzzy Enhancement -> Crop -> Return Processed Image
-"""
-
 from flask import Blueprint, request, send_file, jsonify
-
 from services.background_removal import remove_background
 from services.image_analysis import analyze_image
 from services.fuzzy_enhancement import apply_fuzzy_enhancement
@@ -23,64 +13,37 @@ VALID_PHOTO_TYPES = ["1x1", "1.5x1.5", "2x2", "passport"]
 
 
 def process_id_photo(image, photo_type):
-    """
-    Run the complete ID photo processing pipeline.
-
-    Args:
-        image (bytes): Raw image file bytes.
-        photo_type (str): One of "1x1", "1.5x1.5", "2x2", "passport".
-
-    Returns:
-        io.BytesIO: In-memory PNG file of the processed ID photo.
-
-    Raises:
-        ValueError: If the image is invalid or processing fails.
-    """
     print("[BACKEND] Starting ID photo pipeline", flush=True)
-
-    # Step 1: Validate image
+    # Validate image
     print("[BACKEND] Validating image", flush=True)
     image = validate_image(image)
     print("[BACKEND] Image validated", flush=True)
 
-    # Step 2: Remove background
+    # Remove background
     print("[BACKEND] Removing background", flush=True)
     image = remove_background(image)
     print("[BACKEND] Background removed", flush=True)
 
-    # Step 3: Analyze image
+    #  Analyze image
     print("[BACKEND] Analyzing image", flush=True)
     features = analyze_image(image)
     print(f"[BACKEND] Image analyzed: {features}", flush=True)
 
-    # Step 4: Apply fuzzy enhancement
+    # Apply fuzzy enhancement
     print("[BACKEND] Applying fuzzy enhancement", flush=True)
     image = apply_fuzzy_enhancement(image, features)
     print("[BACKEND] Fuzzy enhancement applied", flush=True)
 
-    # Step 5: Crop to selected ID size
+    # Crop to selected ID size
     print(f"[BACKEND] Cropping to {photo_type}", flush=True)
     image = crop_id_photo(image, photo_type)
     print("[BACKEND] Image cropped", flush=True)
-
     print("[BACKEND] Pipeline complete", flush=True)
     return image
 
 
 @image_bp.route("/api/process", methods=["POST"])
 def process_image():
-    """
-    Process an uploaded image through the complete ID photo pipeline.
-
-    Accepts multipart/form-data with:
-        image: The uploaded image file
-        type:  The selected ID photo size (1x1, 1.5x1.5, 2x2, passport)
-
-    Returns:
-        image/png: The processed ID photo
-    """
-    print("[BACKEND] Request received", flush=True)
-
     # Check if image was uploaded
     if "image" not in request.files:
         print("[BACKEND] Missing image file", flush=True)
@@ -131,13 +94,7 @@ def process_image():
 
 @image_bp.route("/api/remove-bg", methods=["POST"])
 def remove_bg():
-    """
-    Remove the background from an uploaded image.
-
-    Returns the processed image as a JPEG file.
-    """
     print("[BACKEND] Request received", flush=True)
-
     if "image" not in request.files:
         return jsonify({
             "success": False,
@@ -162,13 +119,7 @@ def remove_bg():
 
 @image_bp.route("/api/id-crop", methods=["POST"])
 def id_crop():
-    """
-    Crop an uploaded image to a standard ID photo size.
-
-    Returns the processed image as a PNG file.
-    """
     print("[BACKEND] Request received", flush=True)
-
     if "image" not in request.files:
         return jsonify({
             "success": False,

@@ -1,5 +1,4 @@
 import { enhanceImage } from "./js/api.js";
-
 // ######### State #########
 let selectedFile = null;
 let processedBlob = null;
@@ -51,10 +50,6 @@ const requiredElements = [
     photoSize,
     printSheet
 ];
-
-if (requiredElements.some(element => !element)) {
-    console.error("One or more required HTML elements are missing.");
-}
 
 // ######### Photo Dimensions #########
 const PHOTO_DIMENSIONS = {
@@ -186,7 +181,6 @@ async function processImage() {
 
     try {
         console.log("1. BEFORE API");
-
         const blob = await enhanceImage(
             selectedFile,
             photoSize.value
@@ -206,7 +200,6 @@ async function processImage() {
         }
 
         processedBlob = blob;
-
         console.log("3. processedBlob STORED");
 
         if (processedImageURL) {
@@ -304,14 +297,11 @@ function downloadImage() {
 
     const url = URL.createObjectURL(processedBlob);
     const link = document.createElement("a");
-
     link.href = url;
     link.download = "id-photo.png";
-
     document.body.appendChild(link);
     link.click();
     link.remove();
-
     setTimeout(() => {
         URL.revokeObjectURL(url);
     }, 1000);
@@ -384,7 +374,6 @@ function storeProcessedData() {
 
         if (selectedFile) {
             const originalReader = new FileReader();
-
             originalReader.onloadend = () => {
                 sessionStorage.setItem(
                     "originalImage",

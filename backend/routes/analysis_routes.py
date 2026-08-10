@@ -17,18 +17,6 @@ analysis_bp = Blueprint("analysis", __name__)
 
 @analysis_bp.route("/api/analyze", methods=["POST"])
 def analyze():
-    """
-    Analyze an uploaded image and return the full fuzzy logic analysis.
-
-    Returns JSON with:
-        - Original image features
-        - Enhancement parameters
-        - Fired fuzzy rules
-        - Fuzzified input values
-        - Fuzzy output sets
-    """
-    print("[BACKEND] Request received", flush=True)
-
     if "image" not in request.files:
         return jsonify({
             "success": False,

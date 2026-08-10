@@ -1,11 +1,3 @@
-"""
-ID-Oto Flask Backend - Application entry point.
-
-This module handles application setup, CORS configuration,
-and route registration. All business logic is delegated to
-the routes, services, and fuzzy_logic packages.
-"""
-
 import os
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -13,16 +5,7 @@ from routes.image_routes import image_bp
 from routes.analysis_routes import analysis_bp
 
 app = Flask(__name__)
-
-# Configure CORS for the frontend development server
-# Allow all origins in development; restrict in production
-#
-# Default allowed origins include common dev servers (Live Server on 5501,
-# Vite on 5173, etc.). Additional origins can be supplied via the
-# CORS_ORIGINS environment variable as a comma-separated list, e.g.:
-#   CORS_ORIGINS="http://localhost:5501,http://127.0.0.1:5501"
 DEFAULT_CORS_ORIGINS = [
-    # VS Code Live Server (default port 5501)
     "http://localhost:5501",
     "http://127.0.0.1:5501",
     # Vite dev server
@@ -37,7 +20,6 @@ DEFAULT_CORS_ORIGINS = [
     "http://127.0.0.1:8080",
 ]
 
-# Allow overriding/adding origins via environment variable (comma-separated)
 _env_origins = os.environ.get("CORS_ORIGINS", "")
 if _env_origins:
     DEFAULT_CORS_ORIGINS.extend(
@@ -59,13 +41,11 @@ app.register_blueprint(analysis_bp)
 
 @app.route("/")
 def home():
-    """Health check endpoint."""
     return "ID-Oto Flask Backend running"
 
 
 @app.route("/health")
 def health():
-    """Health check endpoint returning JSON status."""
     return jsonify({"status": "ok", "service": "id-oto-backend"})
 
 

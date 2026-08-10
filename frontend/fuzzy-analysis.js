@@ -1,10 +1,4 @@
 import { analyzeImage } from "./js/api.js";
-
-/**
- * Initialize the fuzzy analysis page.
- * Checks for stored data from the main page, or sets up
- * the file upload handler for direct image uploads.
- */
 function init() {
     console.log("🔥 fuzzy-analysis.js loaded");
 
@@ -49,9 +43,9 @@ async function handleFileUpload(event) {
         // Hide loading
         if (analysisLoading) analysisLoading.classList.remove("active");
 
-        console.log("✅ Fuzzy analysis complete for uploaded file");
+        console.log("Fuzzy analysis complete for uploaded file");
     } catch (error) {
-        console.error("❌ Error analyzing uploaded image:", error);
+        console.error("Error analyzing uploaded image:", error);
         const analysisLoading = document.getElementById("analysisLoading");
         const analysisError = document.getElementById("analysisError");
         if (analysisLoading) analysisLoading.classList.remove("active");
@@ -77,8 +71,8 @@ function dataURLToBlob(dataURL) {
 }
 
 /**
- * Check for stored processed image data from the main page,
- * then call the analysis API and populate the UI.
+ * Checking for stored processed image data from the main page,
+ * and  then call the analysis API and populate the UI.
  */
 async function checkForStoredData() {
     const hasProcessedImage = sessionStorage.getItem("hasProcessedImage");
@@ -147,9 +141,9 @@ async function checkForStoredData() {
         sessionStorage.removeItem("photoSize");
         sessionStorage.removeItem("hasProcessedImage");
 
-        console.log("✅ Fuzzy analysis complete");
+        console.log("Fuzzy analysis complete");
     } catch (error) {
-        console.error("❌ Error loading stored data:", error);
+        console.error("Error loading stored data:", error);
         const analysisLoading = document.getElementById("analysisLoading");
         const analysisError = document.getElementById("analysisError");
         if (analysisLoading) analysisLoading.classList.remove("active");
@@ -168,7 +162,6 @@ function populateStatistics(analysis) {
     setText("origContrast", orig.contrast != null ? orig.contrast.toFixed(2) : "-");
     setText("origSharpness", orig.sharpness != null ? orig.sharpness.toFixed(2) : "-");
     setText("origNoise", orig.noise != null ? orig.noise.toFixed(2) : "-");
-
     setText("procBrightness", proc.brightness != null ? proc.brightness.toFixed(2) : "-");
     setText("procContrast", proc.contrast != null ? proc.contrast.toFixed(2) : "-");
     setText("procSharpness", proc.sharpness != null ? proc.sharpness.toFixed(2) : "-");
@@ -203,37 +196,27 @@ function populateRules(rules) {
     rules.forEach((rule) => {
         const card = document.createElement("div");
         card.className = "rule-card";
-
         const header = document.createElement("div");
         header.className = "rule-header";
-
         const title = document.createElement("h3");
         title.textContent = `Rule ${rule.id}`;
-
         const badge = document.createElement("span");
         badge.className = "activation-badge";
         badge.textContent = `${(rule.activation * 100).toFixed(1)}%`;
-
         header.appendChild(title);
         header.appendChild(badge);
-
         const desc = document.createElement("p");
         desc.className = "rule-description";
         desc.textContent = rule.description;
-
         const bar = document.createElement("div");
-        bar.className = "activation-bar";
-
+        bar.className = "activation-bar"
         const fill = document.createElement("div");
         fill.className = "activation-fill";
         fill.style.width = `${(rule.activation * 100).toFixed(1)}%`;
-
         bar.appendChild(fill);
-
         card.appendChild(header);
         card.appendChild(desc);
         card.appendChild(bar);
-
         container.appendChild(card);
     });
 }
@@ -251,17 +234,13 @@ function populateComparison(analysis) {
     keys.forEach((key, index) => {
         const origVal = orig[key];
         const procVal = proc[key];
-
         const origStr = origVal != null ? origVal.toFixed(2) : "-";
         const procStr = procVal != null ? procVal.toFixed(2) : "-";
-
         setText(`cmpOrig${features[index]}`, origStr);
         setText(`cmpProc${features[index]}`, procStr);
-
         if (origVal != null && procVal != null) {
             const change = procVal - origVal;
             const pctChange = origVal !== 0 ? ((change / origVal) * 100) : 0;
-
             setText(`cmpChange${features[index]}`, (change >= 0 ? "+" : "") + change.toFixed(2));
             setText(`cmpPct${features[index]}`, (pctChange >= 0 ? "+" : "") + pctChange.toFixed(2) + "%");
         } else {
