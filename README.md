@@ -1,3 +1,11 @@
+# LINK FOR MY VIDEO PRESENTATION (EXAM)
+- 
+https://drive.google.com/drive/folders/1nPu0g79XoyFBK_rYgiQhnyztzbhK7JDl
+
+
+```
+
+
 # ID_Oto
 <img width="1900" height="358" alt="image" src="https://github.com/user-attachments/assets/3c6b9d0d-365c-4a8a-81ac-9591f7b5a83e" />
 
