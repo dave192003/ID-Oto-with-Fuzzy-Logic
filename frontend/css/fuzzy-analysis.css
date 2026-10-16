@@ -1,7 +1,28 @@
-/* ==========================
-   FUZZY LOGIC ANALYSIS PAGE
-========================== */
+/* ============================================================
+   FUZZY ANALYSIS STYLESHEET — css/fuzzy-analysis.css
+   ------------------------------------------------------------
+   Loaded by: fuzzy-analysis.html
+   Requires:  css/global.css (variables, reset, navbar, footer)
 
+   Contents:
+     1. Page Layout
+     2. Navbar Overrides
+     3. Page Header
+     4. Upload Section
+     5. Analysis Content (loading / error)
+     6. Sections
+     7. Image Comparison
+     8. Image Statistics
+     9. Fuzzy Parameters
+    10. Fuzzy Rules
+    11. Comparison Table
+    12. Footer Overrides
+    13. Responsive
+   ============================================================ */
+
+/* ============================================================
+   1. PAGE LAYOUT
+   ============================================================ */
 .analysis-main {
     display: flex;
     flex-direction: column;
@@ -10,57 +31,22 @@
     padding-bottom: 3rem;
 }
 
-.analysis-main .navBar-container {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    box-shadow: var(--shadow);
-}
-
-.analysis-main .navBar-container h2 {
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
-    color: white;
-    background: var(--primary);
-    padding: .8rem 1.8rem;
-    border-radius: 999px;
-    transition: .3s;
-}
-
-.analysis-main .navBar-container h2:hover {
-    background: var(--primary-hover);
-}
-
+/* ============================================================
+   2. NAVBAR OVERRIDES
+   Base navbar styles live in css/global.css — only the
+   analysis page differences are declared here.
+   ============================================================ */
 .analysis-main .nav-box ul {
-    list-style: none;
-    display: flex;
-    flex-direction: row;
     gap: clamp(20px, 20vw, 80px);
 }
 
 .analysis-main .nav-box li {
     font-size: clamp(15px, 2vw, 30px);
-    padding: 0.5rem 1rem;
-    border-radius: 50px;
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-.analysis-main .nav-box li:hover {
-    background: var(--primary);
-    color: white;
-}
-
-.analysis-main .nav-box a {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* HEADER */
+/* ============================================================
+   3. PAGE HEADER
+   ============================================================ */
 .analysis-header {
     text-align: center;
     padding: 2rem 1rem;
@@ -77,7 +63,9 @@
     color: rgba(67, 67, 82, 0.7);
 }
 
-/* UPLOAD SECTION */
+/* ============================================================
+   4. UPLOAD SECTION
+   ============================================================ */
 .analysis-upload {
     display: flex;
     justify-content: center;
@@ -147,7 +135,9 @@
     transform: scale(1.05);
 }
 
-/* ANALYSIS CONTENT */
+/* ============================================================
+   5. ANALYSIS CONTENT (loading / error)
+   ============================================================ */
 .analysis-content {
     display: none;
     flex-direction: column;
@@ -162,7 +152,6 @@
     display: flex;
 }
 
-/* LOADING */
 .analysis-loading {
     display: none;
     flex-direction: column;
@@ -186,7 +175,9 @@
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .analysis-loading p {
@@ -194,7 +185,6 @@
     color: #555;
 }
 
-/* ERROR */
 .analysis-error {
     background: #fee2e2;
     border: 1px solid #f87171;
@@ -205,7 +195,9 @@
     font-size: 1rem;
 }
 
-/* SECTIONS */
+/* ============================================================
+   6. SECTIONS
+   ============================================================ */
 .analysis-section {
     background: white;
     border-radius: 20px;
@@ -221,7 +213,9 @@
     border-bottom: 2px solid rgba(0, 129, 214, 0.2);
 }
 
-/* IMAGE COMPARISON */
+/* ============================================================
+   7. IMAGE COMPARISON
+   ============================================================ */
 .image-comparison-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -259,7 +253,9 @@
     border-radius: 5px;
 }
 
-/* STATISTICS */
+/* ============================================================
+   8. IMAGE STATISTICS
+   ============================================================ */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -303,7 +299,9 @@
     font-size: 1.1rem;
 }
 
-/* PARAMETERS */
+/* ============================================================
+   9. FUZZY PARAMETERS
+   ============================================================ */
 .params-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -341,7 +339,9 @@
     line-height: 1.4;
 }
 
-/* RULES */
+/* ============================================================
+   10. FUZZY RULES
+   ============================================================ */
 .rules-container {
     display: flex;
     flex-direction: column;
@@ -404,7 +404,9 @@
     transition: width 0.5s ease;
 }
 
-/* COMPARISON TABLE */
+/* ============================================================
+   11. COMPARISON TABLE
+   ============================================================ */
 .comparison-table-container {
     overflow-x: auto;
 }
@@ -449,7 +451,10 @@
     color: #333;
 }
 
-/* FOOTER */
+/* ============================================================
+   12. FOOTER OVERRIDES
+   Base footer styles live in css/global.css.
+   ============================================================ */
 .analysis-main .footer-container {
     margin-top: auto;
     padding: 2rem;
@@ -457,11 +462,12 @@
 }
 
 .analysis-main .footer-container p {
-    font-size: clamp(15px, 10vw, 20px);
     color: rgba(67, 67, 82, 0.7);
 }
 
-/* RESPONSIVE */
+/* ============================================================
+   13. RESPONSIVE
+   ============================================================ */
 @media (max-width: 900px) {
     .image-comparison-grid,
     .stats-grid {
