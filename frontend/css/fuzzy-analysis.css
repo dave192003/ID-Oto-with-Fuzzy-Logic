@@ -1,28 +1,4 @@
-/* ============================================================
-   FUZZY ANALYSIS STYLESHEET — css/fuzzy-analysis.css
-   ------------------------------------------------------------
-   Loaded by: fuzzy-analysis.html
-   Requires:  css/global.css (variables, reset, navbar, footer)
 
-   Contents:
-     1. Page Layout
-     2. Navbar Overrides
-     3. Page Header
-     4. Upload Section
-     5. Analysis Content (loading / error)
-     6. Sections
-     7. Image Comparison
-     8. Image Statistics
-     9. Fuzzy Parameters
-    10. Fuzzy Rules
-    11. Comparison Table
-    12. Footer Overrides
-    13. Responsive
-   ============================================================ */
-
-/* ============================================================
-   1. PAGE LAYOUT
-   ============================================================ */
 .analysis-main {
     display: flex;
     flex-direction: column;
@@ -31,11 +7,7 @@
     padding-bottom: 3rem;
 }
 
-/* ============================================================
-   2. NAVBAR OVERRIDES
-   Base navbar styles live in css/global.css — only the
-   analysis page differences are declared here.
-   ============================================================ */
+
 .analysis-main .nav-box ul {
     gap: clamp(20px, 20vw, 80px);
 }
@@ -50,6 +22,7 @@
 .analysis-header {
     text-align: center;
     padding: 2rem 1rem;
+    animation: fade-in-up 0.6s ease backwards;
 }
 
 .analysis-header h1 {
@@ -94,11 +67,18 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: var(--shadow);
+    animation: fade-in-up 0.6s 0.1s ease backwards;
 }
 
 .analysis-upload-card:hover {
     transform: scale(1.02);
     border-color: var(--primary-hover);
+}
+
+.analysis-upload-card:active {
+    transform: scale(0.98);
+    border-color: var(--primary-hover);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
 }
 
 .analysis-upload-icon {
@@ -133,6 +113,14 @@
 .analysis-choose-btn:hover {
     background: var(--primary-hover);
     transform: scale(1.05);
+}
+
+/* Pressed / active effect on the upload button */
+.analysis-choose-btn:active {
+    background: var(--primary-hover);
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition-duration: 0.08s;
 }
 
 /* ============================================================
@@ -203,6 +191,24 @@
     border-radius: 20px;
     padding: 2rem;
     box-shadow: var(--shadow);
+    animation: fade-in-up 0.5s ease backwards;
+}
+
+/* Staggered entrance once the analysis content is shown */
+.analysis-section:nth-of-type(2) {
+    animation-delay: 0.08s;
+}
+
+.analysis-section:nth-of-type(3) {
+    animation-delay: 0.16s;
+}
+
+.analysis-section:nth-of-type(4) {
+    animation-delay: 0.24s;
+}
+
+.analysis-section:nth-of-type(5) {
+    animation-delay: 0.32s;
 }
 
 .section-title {
@@ -227,6 +233,14 @@
     border-radius: 15px;
     padding: 1.5rem;
     text-align: center;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.comparison-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
 }
 
 .comparison-card h3 {
@@ -266,6 +280,14 @@
     background: #f0f4f8;
     border-radius: 15px;
     padding: 1.5rem;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
 }
 
 .stats-card h3 {
@@ -360,6 +382,14 @@
     border-radius: 12px;
     padding: 1.25rem;
     border-left: 4px solid var(--primary);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.rule-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
 }
 
 .rule-header {

@@ -4,24 +4,50 @@
     padding: 0 0 0 5rem;
 }
 
-.top-header-container ul {
-    display: flex;
-    flex-direction: row;
-    gap: clamp(10px, 15vw, 20px);
-    background: white;
+/* Marquee wrapper: scrolls the badges ("AI Powered", "Fast", "Easy to Use") */
+.top-header-container {
     width: clamp(50px, 55vw, 500px);
-    justify-content: space-between;
-    padding: 0.5rem 2rem;
+    background: white;
+    padding: 0.5rem 0;
     border-radius: 50px;
-    list-style: none;
     margin-bottom: 3rem;
     border: 1px dashed rgba(0, 0, 255, 0.479);
+    overflow: hidden;
 }
 
-.top-header-container li {
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 12s linear infinite;
+}
+
+.marquee-group {
+    display: flex;
+    flex-shrink: 0;
+    gap: clamp(20px, 4vw, 40px);
+    padding-right: clamp(20px, 4vw, 40px);
+}
+
+.marquee-item {
+    white-space: nowrap;
     font-size: clamp(8px, 3vw, 25px);
     color: rgba(0, 89, 255, 0.979);
     font-weight: bold;
+}
+
+/* Pause the scroll while the user hovers the pill */
+.top-header-container:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 .left-section .header-container {
@@ -30,6 +56,7 @@
     justify-content: center;
     align-self: center;
     width: 100%;
+    animation: fade-in-up 0.6s 0.05s ease backwards;
 }
 
 .header-container .name-header {
@@ -69,10 +96,11 @@
 .right-section {
     padding: 1rem;
     width: 100%;
-    opacity: 0.5;
+    /* opacity: 0.5; */
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: fade-in 0.9s 0.2s ease backwards;
 }
 
 .right-section .hero-image-container {
@@ -123,6 +151,7 @@
     background: white;
     border-radius: 30px;
     box-shadow: var(--shadow);
+    animation: fade-in-up 0.6s 0.15s ease backwards;
 }
 
 .upload-area.done {
@@ -142,6 +171,22 @@
     border-radius: 15px;
     background: rgba(217, 236, 248, 0.664);
     text-align: center;
+    cursor: pointer;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.upload-area .upload-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-hover);
+    box-shadow: 0 12px 24px rgba(0, 129, 214, 0.18);
+}
+
+.upload-area .upload-card:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: 0 4px 10px rgba(0, 129, 214, 0.15);
 }
 
 .upload-area .upload-icon {
@@ -177,7 +222,10 @@
     font-size: 2rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
     box-shadow:
         0 6px 12px rgba(0, 0, 0, .12),
         0 10px 24px rgba(0, 0, 0, .12);
@@ -186,6 +234,17 @@
 .upload-area .choose-file-btn:hover {
     background: var(--primary-hover);
     transform: scale(1.05);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, .16),
+        0 14px 30px rgba(0, 0, 0, .16);
+}
+
+/* Pressed / active effect on the Upload button */
+.upload-area .choose-file-btn:active {
+    background: var(--primary-hover);
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition-duration: 0.08s;
 }
 
 .upload-area .file-info {
@@ -210,6 +269,7 @@
 
 .container.active {
     display: flex;
+    animation: fade-in-up 0.4s ease backwards;
 }
 
 /* PREVIEW SECTION (original / processed cards) */
@@ -231,6 +291,15 @@
     background: #cedadd;
     padding: clamp(0.8rem, 2vw, 1rem);
     border-radius: clamp(10px, 2vw, 15px);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    animation: fade-in-up 0.45s ease backwards;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
 }
 
 .card h3 {
@@ -253,6 +322,49 @@ button {
     cursor: pointer;
     border-radius: clamp(8px, 1.5vw, 10px);
     font-size: clamp(0.9rem, 1.5vw, 1rem);
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* Smooth hover: gentle lift + soft shadow */
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* Pressed / active effect */
+button:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Disabled buttons (e.g. while processing) get no motion */
+button:disabled,
+button:disabled:hover,
+button:disabled:active {
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Staggered entrance for the action buttons */
+.buttons button {
+    animation: fade-in-up 0.4s ease backwards;
+}
+
+.buttons button:nth-child(2) {
+    animation-delay: 0.06s;
+}
+
+.buttons button:nth-child(3) {
+    animation-delay: 0.12s;
+}
+
+.buttons button:nth-child(4) {
+    animation-delay: 0.18s;
 }
 
 .process {
@@ -310,6 +422,7 @@ button {
     display: flex;
     flex-direction: column;
     gap: clamp(0.5rem, 2vw, 0.75rem);
+    animation: fade-in-up 0.5s 0.25s ease backwards;
 }
 
 .size-selector select {
@@ -354,6 +467,7 @@ button {
     width: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    animation: fade-in 0.7s 0.35s ease backwards;
 }
 
 .privacy-info-container p {
@@ -379,6 +493,7 @@ button {
     background: white;
     justify-self: center;
     border-radius: 30px;
+    animation: fade-in-up 0.6s 0.25s ease backwards;
 }
 
 .feature-info-section .box {
@@ -388,6 +503,28 @@ button {
     justify-content: center;
     align-items: center;
     width: 15%;
+    transition: transform 0.3s ease;
+    animation: fade-in-up 0.5s ease backwards;
+}
+
+.feature-info-section .box:nth-child(2) {
+    animation-delay: 0.07s;
+}
+
+.feature-info-section .box:nth-child(3) {
+    animation-delay: 0.14s;
+}
+
+.feature-info-section .box:nth-child(4) {
+    animation-delay: 0.21s;
+}
+
+.feature-info-section .box:nth-child(5) {
+    animation-delay: 0.28s;
+}
+
+.feature-info-section .box:hover {
+    transform: translateY(-6px);
 }
 
 .feature-info-section .box h3 {
@@ -397,6 +534,11 @@ button {
 .feature-info-section .box img {
     background: transparent;
     width: 40%;
+    transition: transform 0.3s ease;
+}
+
+.feature-info-section .box:hover img {
+    transform: scale(1.08);
 }
 
 /*  PRINT MEDIA QUERY*/
