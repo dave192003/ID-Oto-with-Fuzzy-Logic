@@ -73,11 +73,11 @@ main {
     list-style: none;
     display: flex;
     flex-direction: row;
-    gap: clamp(20px, 20vw, 80px);
+    gap: clamp(20px, 20vw, 30px);
 }
 
 .nav-box li {
-    font-size: clamp(15px, 2vw, 30px);
+    font-size: clamp(15px, 2vw, 20px);
     padding: 0.5rem 1rem;
     border-radius: 50px;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -124,7 +124,7 @@ main {
 }
 
 .header-container .name-header {
-    font-size: clamp(3.5rem, 8vw, 5rem);
+    font-size: clamp(3rem, 8vw, 5rem);
     line-height: .95;
     color: rgb(43, 41, 131);
     margin-bottom: .4rem;
@@ -138,13 +138,13 @@ main {
 
 .header-container h3 {
     margin-top: 0.1rem;
-    font-size: clamp(2rem, 2vw, 1rem);
+    font-size: clamp(1rem, 2vw, 1.5rem);
     color: rgb(67, 67, 82);
 }
 
 .header-container .easier {
     color: var(--primary);
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.3rem, 3vw, 2rem);
     -webkit-text-stroke: 1px var(--primary);
 }
 
@@ -152,7 +152,7 @@ main {
     display: flex;
     flex-wrap: wrap;
     color: rgba(87, 87, 87, 0.644);
-    font-size: clamp(1.25rem, 3vw, 0.5rem);
+    font-size: clamp(0.8rem, 1vw, 1.2rem);
     padding: 0.3rem 0;
 }
 
