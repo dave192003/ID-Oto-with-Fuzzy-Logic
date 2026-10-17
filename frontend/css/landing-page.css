@@ -73,7 +73,7 @@
 }
 
 .header-container h3 {
-    margin-top: 0.1rem;
+    margin-top: 1rem;
     font-size: clamp(1rem, 2vw, 1.5rem);
     color: rgb(67, 67, 82);
 }
@@ -285,6 +285,9 @@
         0 4px 8px rgba(0, 0, 0, 0.164),
         0 12px 20px rgba(0, 0, 0, 0.192),
         0 24px 48px rgba(0, 0, 0, 0.13);
+    padding: none;
+    object-fit: cover;
+    
 }
 
 .card {
@@ -442,7 +445,7 @@ button:disabled:active {
 
 /*  PRINT LAYOUT  */
 .print-sheet {
-    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+    /* margin-top: clamp(1.5rem, 4vw, 2.5rem); */
     display: grid;
     grid-template-columns: repeat(2, auto);
     justify-content: center;
@@ -569,7 +572,7 @@ button:disabled:active {
 
     .container {
         background: white;
-        width: auto;
+        width: 100%;
         padding: 0;
         box-shadow: none;
     }

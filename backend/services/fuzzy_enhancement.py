@@ -18,18 +18,7 @@ DPI = 300
 
 
 def apply_fuzzy_enhancement(image, features=None):
-    """
-    Apply fuzzy-logic-based enhancement to an image.
-
-    Args:
-        image: Raw image bytes, BytesIO, or BGR numpy array.
-        features (dict, optional): Pre-computed image features.
-            If None, features will be computed from the image.
-
-    Returns:
-        numpy.ndarray: Enhanced BGR image array.
-    """
-    print("===== FUZZY ENHANCEMENT =====", flush=True)
+    """ Apply fuzzy-logic-based enhancement to an image."""
 
     # Convert to numpy array
     img = _to_numpy_array(image)
@@ -46,33 +35,14 @@ def apply_fuzzy_enhancement(image, features=None):
     # Run fuzzy logic pipeline
     decision = fuzzy_logic(features)
     parameters = decision["parameters"]
-    print("===== DECISION =====", flush=True)
-    print(parameters, flush=True)
 
     # Apply enhancement
     enhanced = enhance_image(img, parameters)
-
-    print("Output shape:", enhanced.shape, flush=True)
-    print("Min:", enhanced.min(), flush=True)
-    print("Max:", enhanced.max(), flush=True)
-
     return enhanced
 
 
 def enhance_image(img, parameters):
-    """
-    Apply enhancement operations to an image based on fuzzy parameters.
-
-    Args:
-        img (numpy.ndarray): BGR image array.
-        parameters (dict): Enhancement parameters with keys:
-            alpha, beta, sharpen, denoise
-
-    Returns:
-        numpy.ndarray: Enhanced BGR image array.
-    """
-    print("===== ENHANCE DEBUG =====", flush=True)
-    print("Parameters:", parameters, flush=True)
+    """ Apply enhancement operations to an image based on fuzzy parameters. """
 
     denoised = cv2.fastNlMeansDenoisingColored(
         img,
@@ -80,7 +50,7 @@ def enhance_image(img, parameters):
         parameters["denoise"],
         parameters["denoise"],
         7,
-        21
+        25
     )
 
     # Use stable sharpening kernel
@@ -88,7 +58,7 @@ def enhance_image(img, parameters):
 
     kernel = np.array([
     [0, -sharpen_strength, 0],
-    [-sharpen_strength, 1 + (4 * sharpen_strength), -sharpen_strength],
+    [-sharpen_strength, 1 + (1 * sharpen_strength), -sharpen_strength],
     [0, -sharpen_strength, 0]
     ], dtype=np.float32)
 
@@ -108,22 +78,9 @@ def enhance_image(img, parameters):
 
 
 def encode_image_png(img_bgr):
-    """
-    Encode a BGR image array as a PNG file.
-
-    Args:
-        img_bgr (numpy.ndarray): BGR image array.
-
-    Returns:
-        io.BytesIO: In-memory PNG file.
-    """
-    print("===== ENCODE PNG =====", flush=True)
-    print("Shape:", img_bgr.shape, flush=True)
-
+    """ Encode a BGR image array as a PNG file. """
     img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-
     pil_img = Image.fromarray(img_rgb)
-
     output = io.BytesIO()
 
     pil_img.save(
@@ -131,9 +88,5 @@ def encode_image_png(img_bgr):
         format="PNG",
         dpi=(DPI, DPI)
     )
-
     output.seek(0)
-
-    print("PNG SIZE:", len(output.getvalue()), flush=True)
-
     return output

@@ -1,9 +1,3 @@
-"""
-ID photo cropping service.
-
-Detects faces and crops images to standard ID photo dimensions.
-"""
-
 import io
 import cv2
 import numpy as np
@@ -39,15 +33,7 @@ PHOTO_TYPES = {
 
 
 def _to_rgb_array(image):
-    """
-    Convert an image (bytes, BytesIO, or numpy array) to an RGB numpy array.
-
-    Args:
-        image: Raw image bytes, BytesIO, or BGR/BGRA numpy array.
-
-    Returns:
-        numpy.ndarray: RGB image array.
-    """
+   
     if isinstance(image, np.ndarray):
         img_bgr = image
     elif isinstance(image, io.BytesIO):
@@ -70,19 +56,7 @@ def _to_rgb_array(image):
 
 
 def crop_id_photo(image, photo_type):
-    """
-    Detect a face in the image and crop it to the specified ID photo size.
-
-    Args:
-        image: Raw image bytes, BytesIO, or BGR/BGRA numpy array.
-        photo_type (str): One of "1x1", "1.5x1.5", "2x2", "passport".
-
-    Returns:
-        io.BytesIO: In-memory PNG file of the cropped ID photo.
-
-    Raises:
-        ValueError: If the photo type is invalid or no face is detected.
-    """
+    """Detect a face in the image and crop it to the specified ID photo size."""
     if photo_type not in PHOTO_TYPES:
         raise ValueError(f"Invalid photo type: {photo_type}")
 
@@ -127,7 +101,7 @@ def crop_id_photo(image, photo_type):
     center_y = y + h // 2
 
     left = center_x - crop_width // 2
-    top = center_y - int(crop_height * 0.40)
+    top = center_y - int(crop_height * 0.43)
 
     right = left + crop_width
     bottom = top + crop_height

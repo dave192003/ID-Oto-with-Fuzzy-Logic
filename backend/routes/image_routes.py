@@ -13,32 +13,21 @@ VALID_PHOTO_TYPES = ["1x1", "1.5x1.5", "2x2", "passport"]
 
 
 def process_id_photo(image, photo_type):
-    print("[BACKEND] Starting ID photo pipeline", flush=True)
+
     # Validate image
-    print("[BACKEND] Validating image", flush=True)
     image = validate_image(image)
-    print("[BACKEND] Image validated", flush=True)
 
      #  Analyze image
-    print("[BACKEND] Analyzing image", flush=True)
     features = analyze_image(image)
-    print(f"[BACKEND] Image analyzed: {features}", flush=True)
-    
-    # Remove background
-    print("[BACKEND] Removing background", flush=True)
-    image = remove_background(image)
-    print("[BACKEND] Background removed", flush=True)
 
     # Apply fuzzy enhancement
-    print("[BACKEND] Applying fuzzy enhancement", flush=True)
     image = apply_fuzzy_enhancement(image, features)
-    print("[BACKEND] Fuzzy enhancement applied", flush=True)
+
+     # Remove background
+    image = remove_background(image)
 
     # Crop to selected ID size
-    print(f"[BACKEND] Cropping to {photo_type}", flush=True)
     image = crop_id_photo(image, photo_type)
-    print("[BACKEND] Image cropped", flush=True)
-    print("[BACKEND] Pipeline complete", flush=True)
     return image
 
 

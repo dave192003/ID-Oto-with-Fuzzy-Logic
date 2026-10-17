@@ -30,18 +30,7 @@ PHOTO_DIMENSIONS = {
 
 
 def generate_print_layout(image_bytes, photo_type, sheet="4x6", copies=6):
-    """
-    Generate a printable layout with multiple copies of an ID photo.
-
-    Args:
-        image_bytes (bytes): Processed ID photo image bytes.
-        photo_type (str): One of "1x1", "1.5x1.5", "2x2", "passport".
-        sheet (str): Print sheet size ("4x6", "5x7", "a4").
-        copies (int): Number of copies to place on the sheet.
-
-    Returns:
-        io.BytesIO: In-memory PNG file of the print layout.
-    """
+    """Generate a printable layout with multiple copies of an ID photo. """
     if photo_type not in PHOTO_DIMENSIONS:
         raise ValueError(f"Invalid photo type: {photo_type}")
 
