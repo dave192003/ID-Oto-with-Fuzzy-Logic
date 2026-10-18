@@ -88,7 +88,7 @@ def crop_id_photo(image, photo_type):
 
     img_h, img_w = img_rgb.shape[:2]
 
-    # Calculate crop dimensions
+    # Calculate crop dimensionss
     if crop_ratio == 1.0:
         crop_width = int(w * 2.3)
         crop_height = crop_width
