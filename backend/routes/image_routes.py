@@ -4,7 +4,7 @@ from services.image_analysis import analyze_image
 from services.fuzzy_enhancement import apply_fuzzy_enhancement
 from services.cropping import crop_id_photo
 from utils.image_utils import validate_image
-
+import traceback
 # Create a blueprint for image processing routes
 image_bp = Blueprint("image", __name__)
 
@@ -12,22 +12,26 @@ image_bp = Blueprint("image", __name__)
 VALID_PHOTO_TYPES = ["1x1", "1.5x1.5", "2x2", "passport"]
 
 
+
 def process_id_photo(image, photo_type):
-
-    # Validate image
     image = validate_image(image)
+    print("[DEBUG] Stage 1: Image validated", flush=True)
 
-     #  Analyze image
-    features = analyze_image(image)
-
-    # Apply fuzzy enhancement
-    image = apply_fuzzy_enhancement(image, features)
-
-     # Remove background
-    image = remove_background(image)
-
-    # Crop to selected ID size
     image = crop_id_photo(image, photo_type)
+    print("[DEBUG] Stage 5: ID photo cropped", flush=True)
+
+    features = analyze_image(image)
+    print("[DEBUG] Stage 2: Image analyzed", flush=True)
+
+    image = apply_fuzzy_enhancement(image, features)
+    print("[DEBUG] Stage 3: Image enhanced", flush=True)
+
+    image = remove_background(image)
+    print("[DEBUG] Stage 4: Background removed", flush=True)
+
+    print(f"[DEBUG] Stage 5: Starting crop, type={photo_type}", flush=True)
+    print(f"[DEBUG] Crop input type: {type(image).__name__}", flush=True)
+
     return image
 
 
@@ -68,6 +72,7 @@ def process_image():
 
     except ValueError as e:
         print(f"[BACKEND] Processing error: {e}", flush=True)
+        traceback.print_exc()
         return jsonify({
             "success": False,
             "error": str(e)
@@ -75,11 +80,11 @@ def process_image():
 
     except Exception as e:
         print(f"[BACKEND] Unexpected error: {e}", flush=True)
+        traceback.print_exc()
         return jsonify({
             "success": False,
             "error": "Unable to process image"
         }), 500
-
 
 @image_bp.route("/api/remove-bg", methods=["POST"])
 def remove_bg():
