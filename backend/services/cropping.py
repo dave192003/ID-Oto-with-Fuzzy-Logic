@@ -32,6 +32,106 @@ PHOTO_TYPES = {
 }
 
 
+# Haar cascade classifiers used for face detection. Several cascades are tried
+# because detection quality varies between images and OpenCV builds.
+CASCADE_FILES = [
+    "haarcascade_frontalface_default.xml",
+    "haarcascade_frontalface_alt2.xml",
+    "haarcascade_frontalface_alt.xml",
+    "haarcascade_frontalface_alt_tree.xml",
+]
+
+# Detection parameter sets, ordered from strict to relaxed. Trying multiple
+# parameter sets makes face detection robust to different image sizes, poses,
+# and image-quality issues introduced by enhancement/background removal.
+DETECTION_PARAM_SETS = [
+    {"scaleFactor": 1.05, "minNeighbors": 6, "minSize": (35, 35), "flags": cv2.CASCADE_SCALE_IMAGE},
+    {"scaleFactor": 1.10, "minNeighbors": 5, "minSize": (30, 30), "flags": cv2.CASCADE_SCALE_IMAGE},
+    {"scaleFactor": 1.15, "minNeighbors": 4, "minSize": (25, 25), "flags": cv2.CASCADE_SCALE_IMAGE},
+    {"scaleFactor": 1.20, "minNeighbors": 3, "minSize": (20, 20), "flags": cv2.CASCADE_SCALE_IMAGE},
+]
+
+# Upscale images smaller than this width before detection so the Haar cascade
+# has enough resolution to find the face.
+_MIN_DETECTION_WIDTH = 900
+
+
+def _load_cascades():
+    """Load every available Haar cascade classifier."""
+    cascades = []
+    for name in CASCADE_FILES:
+        cascade = cv2.CascadeClassifier(cv2.data.haarcascades + name)
+        if not cascade.empty():
+            cascades.append(cascade)
+    return cascades
+
+
+_CASCADES = _load_cascades()
+
+
+def _resize_for_detection(img, min_width=_MIN_DETECTION_WIDTH):
+    """Upscale small images so faces are large enough for the Haar cascade."""
+    h, w = img.shape[:2]
+    if w >= min_width:
+        return img, 1.0
+    scale = min_width / float(w)
+    new_size = (min_width, max(1, int(h * scale)))
+    return cv2.resize(img, new_size, interpolation=cv2.INTER_CUBIC), scale
+
+
+def _detect_faces(gray):
+    """Detect faces using multiple cascades and parameter sets."""
+    gray_work, scale = _resize_for_detection(gray)
+    variants = [gray_work, cv2.equalizeHist(gray_work)]
+
+    found = []
+    for variant in variants:
+        for cascade in _CASCADES:
+            for params in DETECTION_PARAM_SETS:
+                try:
+                    faces = cascade.detectMultiScale(
+                        variant,
+                        scaleFactor=params["scaleFactor"],
+                        minNeighbors=params["minNeighbors"],
+                        minSize=params["minSize"],
+                        flags=params["flags"],
+                    )
+                except cv2.error:
+                    continue
+                if len(faces) == 0:
+                    continue
+                faces = np.asarray(faces, dtype=np.float32)
+                if scale != 1.0:
+                    faces = faces / scale
+                for (x, y, w, h) in faces:
+                    found.append((int(x), int(y), int(w), int(h)))
+    return found
+
+
+def _merge_overlapping_boxes(boxes):
+    """Drop duplicate detections that mostly overlap a larger box."""
+    if not boxes:
+        return []
+    boxes = sorted(boxes, key=lambda b: b[2] * b[3], reverse=True)
+    kept = []
+    for box in boxes:
+        x, y, w, h = box
+        duplicate = False
+        for (kx, ky, kw, kh) in kept:
+            inter_x = max(0, min(x + w, kx + kw) - max(x, kx))
+            inter_y = max(0, min(y + h, ky + kh) - max(y, ky))
+            inter = inter_x * inter_y
+            if inter == 0:
+                continue
+            smaller_area = min(w * h, kw * kh)
+            if smaller_area > 0 and inter / smaller_area > 0.5:
+                duplicate = True
+                break
+        if not duplicate:
+            kept.append(box)
+    return kept
+
+
 def _to_rgb_array(image):
    
     if isinstance(image, np.ndarray):
@@ -68,19 +168,14 @@ def crop_id_photo(image, photo_type):
 
     gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
 
-    # Load face detection cascade
-    cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-    face_cascade = cv2.CascadeClassifier()
-
-    if not face_cascade.load(cascade_path):
-        print("WARNING: Unable to load CascadeClassifier! Retrying...")
-        face_cascade = cv2.CascadeClassifier(cascade_path)
-
-    # Detect faces
-    faces = face_cascade.detectMultiScale(gray, 1.1, 5)
+    # Detect faces using several cascades and parameter sets for robustness.
+    faces = _merge_overlapping_boxes(_detect_faces(gray))
 
     if len(faces) == 0:
-        raise ValueError("No face detected")
+        raise ValueError(
+            "No face detected. Please upload a clearer photo where the face is "
+            "fully visible (not covered by hair, hands, glasses glare, or shadows)."
+        )
 
     # Use the biggest face
     faces = sorted(faces, key=lambda f: f[2] * f[3], reverse=True)
