@@ -1,6 +1,5 @@
+<img width="2170" height="404" alt="ID-Oto Banner with Bongbong Marcos" src="https://github.com/user-attachments/assets/443906cf-27b3-4977-9abb-f3a756c87e8b" />
 
-
-<img width="1900" height="358" alt="image" src="https://github.com/user-attachments/assets/3c6b9d0d-365c-4a8a-81ac-9591f7b5a83e" />
 
 ## Overview
 
