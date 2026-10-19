@@ -1,7 +1,7 @@
 import io
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 # Print quality DPI
 DPI = 300
@@ -32,8 +32,6 @@ PHOTO_TYPES = {
 }
 
 
-# Haar cascade classifiers used for face detection. Several cascades are tried
-# because detection quality varies between images and OpenCV builds.
 CASCADE_FILES = [
     "haarcascade_frontalface_default.xml",
     "haarcascade_frontalface_alt2.xml",
@@ -132,27 +130,63 @@ def _merge_overlapping_boxes(boxes):
     return kept
 
 
-def _to_rgb_array(image):
-   
+
+def _log_image(tag, arr):
+    """Log basic image properties for debugging."""
+    if arr is None:
+        print(f"[CROP DEBUG] {tag}: None", flush=True)
+        return
+    if isinstance(arr, np.ndarray):
+        ch = arr.shape[2] if len(arr.shape) == 3 else 1
+        print(
+            f"[CROP DEBUG] {tag}: shape={arr.shape} dtype={arr.dtype} "
+            f"channels={ch} min={arr.min()} max={arr.max()} mean={arr.mean():.1f}",
+            flush=True
+        )
+    elif isinstance(arr, io.BytesIO):
+        arr.seek(0)
+        data = arr.getvalue()
+        arr.seek(0)
+        print(f"[CROP DEBUG] {tag}: BytesIO len={len(data)}", flush=True)
+    else:
+        print(f"[CROP DEBUG] {tag}: type={type(arr).__name__}", flush=True)
+
+
+def _decode_image(image):
+    
     if isinstance(image, np.ndarray):
-        img_bgr = image
-    elif isinstance(image, io.BytesIO):
-        np_img = np.frombuffer(image.getvalue(), np.uint8)
-        img_bgr = cv2.imdecode(np_img, cv2.IMREAD_UNCHANGED)
+        return image
+
+    if isinstance(image, io.BytesIO):
+        data = image.getvalue()
     elif isinstance(image, (bytes, bytearray)):
-        np_img = np.frombuffer(image, np.uint8)
-        img_bgr = cv2.imdecode(np_img, cv2.IMREAD_UNCHANGED)
+        data = bytes(image)
     else:
         raise ValueError("Unsupported image type")
 
-    if img_bgr is None:
-        raise ValueError("Invalid image file")
+    if not data:
+        raise ValueError("Empty image file")
 
-    # Force RGB
-    if len(img_bgr.shape) == 3 and img_bgr.shape[2] == 4:
-        return cv2.cvtColor(img_bgr, cv2.COLOR_BGRA2RGB)
-    else:
-        return cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+    # Use PIL to decode (handles EXIF orientation via exif_transpose)
+    with Image.open(io.BytesIO(data)) as source:
+        source = ImageOps.exif_transpose(source)
+        mode = source.mode
+        if mode == "RGBA" or mode == "LA":
+            # Composite transparent images onto white background
+            white_bg = Image.new("RGBA", source.size, (255, 255, 255, 255))
+            source = Image.alpha_composite(white_bg, source.convert("RGBA"))
+        img_rgb = source.convert("RGB")
+
+    img_bgr = cv2.cvtColor(np.array(img_rgb), cv2.COLOR_RGB2BGR)
+    if img_bgr is None or img_bgr.size == 0:
+        raise ValueError("Invalid image file")
+    return img_bgr
+
+
+def _clahe(gray):
+    """Apply CLAHE contrast enhancement to a grayscale image."""
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+    return clahe.apply(gray)
 
 
 def crop_id_photo(image, photo_type):
@@ -163,15 +197,40 @@ def crop_id_photo(image, photo_type):
     config = PHOTO_TYPES[photo_type]
     crop_ratio = config["crop_ratio"]
 
-    # Convert to RGB array
-    img_rgb = _to_rgb_array(image)
+    # Convert input to BGR array (handles EXIF orientation and alpha compositing)
+    img_bgr = _decode_image(image)
+    _log_image("input_decoded", img_bgr)
 
+    img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
     gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
 
-    # Detect faces using several cascades and parameter sets for robustness.
-    faces = _merge_overlapping_boxes(_detect_faces(gray))
+    # Build detection variants: grayscale, equalized, CLAHE
+    detection_images = [
+        gray,
+        cv2.equalizeHist(gray),
+        _clahe(gray),
+    ]
+
+    # Also try on alpha-channel ndarray inputs (transparency handled separately)
+    if isinstance(image, np.ndarray) and len(image.shape) == 3 and image.shape[2] == 4:
+        rgba = image
+        rgb = cv2.cvtColor(rgba, cv2.COLOR_BGRA2RGB)
+        g = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+        detection_images.append(g)
+        detection_images.append(cv2.equalizeHist(g))
+        detection_images.append(_clahe(g))
+
+    faces = []
+    for idx, detection_image in enumerate(detection_images):
+        detected = _detect_faces(detection_image)
+        print(f"[CROP DEBUG] variant {idx}: {len(detected)} faces", flush=True)
+        faces.extend(detected)
+
+    faces = _merge_overlapping_boxes(faces)
+    print(f"[CROP DEBUG] total unique faces after merge: {len(faces)}", flush=True)
 
     if len(faces) == 0:
+        print(f"[CROP DEBUG] No face detected in any variant", flush=True)
         raise ValueError(
             "No face detected. Please upload a clearer photo where the face is "
             "fully visible (not covered by hair, hands, glasses glare, or shadows)."
@@ -180,10 +239,11 @@ def crop_id_photo(image, photo_type):
     # Use the biggest face
     faces = sorted(faces, key=lambda f: f[2] * f[3], reverse=True)
     x, y, w, h = faces[0]
+    print(f"[CROP DEBUG] selected face: x={x} y={y} w={w} h={h}", flush=True)
 
     img_h, img_w = img_rgb.shape[:2]
 
-    # Calculate crop dimensionss
+    # Calculate crop dimensions
     if crop_ratio == 1.0:
         crop_width = int(w * 2.3)
         crop_height = crop_width
@@ -202,25 +262,17 @@ def crop_id_photo(image, photo_type):
     bottom = top + crop_height
 
     # Handle out-of-bounds with white padding
-    pad_left = max(0, -left)
-    pad_top = max(0, -top)
-    pad_right = max(0, right - img_w)
-    pad_bottom = max(0, bottom - img_h)
+    crop_top = max(0, top)
+    crop_bottom = min(img_h, bottom)
+    crop_left = max(0, left)
+    crop_right = min(img_w, right)
 
-    cropped_rgb = img_rgb[
-        max(0, top):min(img_h, bottom),
-        max(0, left):min(img_w, right)
-    ]
+    cropped_rgb = img_rgb[crop_top:crop_bottom, crop_left:crop_right]
 
-    if pad_left > 0 or pad_top > 0 or pad_right > 0 or pad_bottom > 0:
-        cropped_rgb = cv2.copyMakeBorder(
-            cropped_rgb,
-            pad_top,
-            pad_bottom,
-            pad_left,
-            pad_right,
-            borderType=cv2.BORDER_CONSTANT,
-            value=[255, 255, 255]
+    if cropped_rgb.size == 0:
+        raise ValueError(
+            f"Empty crop generated. Image size: {img_w}x{img_h}, "
+            f"crop bounds: ({left}, {top}, {right}, {bottom})"
         )
 
     # Resize to the exact print dimensions

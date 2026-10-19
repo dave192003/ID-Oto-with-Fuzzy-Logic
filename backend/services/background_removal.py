@@ -2,6 +2,7 @@
 import io
 import cv2
 import numpy as np
+import time
 from rembg import remove, new_session
 from PIL import Image, ImageOps
 
@@ -10,6 +11,24 @@ MAX_SIZE = 512
 
 # Load BiRefNet Portrait once when the backend starts
 BG_SESSION = new_session("birefnet-portrait")
+
+
+def _log_image(tag, arr):
+    """Log basic image properties for debugging."""
+    if isinstance(arr, np.ndarray):
+        ch = arr.shape[2] if len(arr.shape) == 3 else 1
+        print(
+            f"[BG DEBUG] {tag}: shape={arr.shape} dtype={arr.dtype} "
+            f"channels={ch} min={arr.min()} max={arr.max()} mean={arr.mean():.1f}",
+            flush=True
+        )
+    elif isinstance(arr, io.BytesIO):
+        arr.seek(0)
+        data = arr.getvalue()
+        arr.seek(0)
+        print(f"[BG DEBUG] {tag}: BytesIO len={len(data)}", flush=True)
+    else:
+        print(f"[BG DEBUG] {tag}: type={type(arr).__name__}", flush=True)
 
 
 def _to_bytes(image):
@@ -56,44 +75,56 @@ def refine_edges(img, erode_size=2, blur_size=3):
     return Image.fromarray(rgba)
 
 
+
 def remove_background(image):
-    """Remove background using BiRefNet and composite onto white."""
+    """Remove background using BiRefNet with reduced memory usage."""
+    t0 = time.time()
+    _log_image("input", image)
+
     image_bytes = _to_bytes(image)
 
     with Image.open(io.BytesIO(image_bytes)) as source:
-        img = ImageOps.exif_transpose(source).convert("RGB")
+        original = ImageOps.exif_transpose(source).convert("RGB")
 
-    # Limit the longest side to 512 pixels
-    if max(img.size) > MAX_SIZE:
-        img.thumbnail(
+    original_size = original.size
+    _log_image("original_decoded", np.array(original))
+
+    processing = original.copy()
+
+    if max(processing.size) > MAX_SIZE:
+        processing.thumbnail(
             (MAX_SIZE, MAX_SIZE),
             Image.Resampling.LANCZOS
         )
+        _log_image("resized_for_processing", np.array(processing))
 
     input_buffer = io.BytesIO()
-    img.save(input_buffer, format="PNG")
-    input_bytes = input_buffer.getvalue()
+    processing.save(input_buffer, format="PNG")
 
-    # Reuse the existing model session
     output_transparent_bytes = remove(
-        input_bytes,
+        input_buffer.getvalue(),
         session=BG_SESSION,
         alpha_matting=False
     )
 
-    img_transparent = Image.open(
-        io.BytesIO(output_transparent_bytes)
-    ).convert("RGBA")
+    with Image.open(io.BytesIO(output_transparent_bytes)) as result:
+        foreground = result.convert("RGBA")
+
+    alpha = foreground.getchannel("A")
+    alpha = alpha.resize(original_size, Image.Resampling.LANCZOS)
+
+    rgba = np.array(original.convert("RGBA"))
+    rgba[:, :, 3] = np.array(alpha)
 
     img_transparent = refine_edges(
-        img_transparent,
+        Image.fromarray(rgba),
         erode_size=1,
-        blur_size=2
+        blur_size=3
     )
 
     white_background = Image.new(
         "RGBA",
-        img_transparent.size,
+        original_size,
         (255, 255, 255, 255)
     )
 
@@ -103,13 +134,15 @@ def remove_background(image):
     )
 
     output = io.BytesIO()
-
+    # Save without EXIF to avoid orientation confusion downstream
     final_img.convert("RGB").save(
         output,
         format="JPEG",
         quality=95,
         dpi=(DPI, DPI)
     )
-
     output.seek(0)
+
+    _log_image("output", output)
+    print(f"[BG DEBUG] remove_background took {time.time() - t0:.1f}s", flush=True)
     return output
