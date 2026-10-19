@@ -275,12 +275,42 @@ def crop_id_photo(image, photo_type):
             f"crop bounds: ({left}, {top}, {right}, {bottom})"
         )
 
-    # Resize to the exact print dimensions
+    # Resize to exact print dimensions without stretching
+    target_width = config["width"]
+    target_height = config["height"]
+
+    crop_h, crop_w = cropped_rgb.shape[:2]
+
+    if crop_w == 0 or crop_h == 0:
+        raise ValueError("Invalid crop dimensions")
+
+    # Fit the cropped image inside the target dimensions
+    scale = min(
+        target_width / crop_w,
+        target_height / crop_h
+    )
+
+    new_width = max(1, round(crop_w * scale))
+    new_height = max(1, round(crop_h * scale))
+
     pil_cropped = Image.fromarray(cropped_rgb)
-    final_cropped = pil_cropped.resize(
-        (config["width"], config["height"]),
+    resized = pil_cropped.resize(
+        (new_width, new_height),
         Image.Resampling.LANCZOS
     )
+
+    # Add white padding to reach exact ID photo dimensions
+    final_cropped = Image.new(
+        "RGB",
+        (target_width, target_height),
+        (255, 255, 255)
+    )
+
+    paste_x = (target_width - new_width) // 2
+    paste_y = (target_height - new_height) // 2
+
+    final_cropped.paste(resized, (paste_x, paste_y))
+
 
     # Encode as PNG with print DPI
     output = io.BytesIO()
