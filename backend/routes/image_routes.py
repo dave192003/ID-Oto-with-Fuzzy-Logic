@@ -13,24 +13,47 @@ VALID_PHOTO_TYPES = ["1x1", "1.5x1.5", "2x2", "passport"]
 
 
 
+
+import io
+import cv2
+import numpy as np
+
 def process_id_photo(image, photo_type):
     image = validate_image(image)
     print("[DEBUG] Stage 1: Image validated", flush=True)
 
+    image = remove_background(image)
+    print("[DEBUG] Stage 3: Background removed", flush=True)
+
     image = crop_id_photo(image, photo_type)
-    print("[DEBUG] Stage 5: ID photo cropped", flush=True)
+    print("[DEBUG] Stage 2: ID photo cropped", flush=True)
 
     features = analyze_image(image)
-    print("[DEBUG] Stage 2: Image analyzed", flush=True)
+    print("[DEBUG] Stage 4: Image analyzed", flush=True)
 
     image = apply_fuzzy_enhancement(image, features)
-    print("[DEBUG] Stage 3: Image enhanced", flush=True)
+    print("[DEBUG] Stage 5: Image enhanced", flush=True)
 
-    image = remove_background(image)
-    print("[DEBUG] Stage 4: Background removed", flush=True)
+    # Ensure output is a file-like object for send_file()
+    if isinstance(image, np.ndarray):
+        success, encoded = cv2.imencode(".png", image)
+        if not success:
+            raise ValueError("Failed to encode processed image")
+        image = io.BytesIO(encoded.tobytes())
 
-    print(f"[DEBUG] Stage 5: Starting crop, type={photo_type}", flush=True)
-    print(f"[DEBUG] Crop input type: {type(image).__name__}", flush=True)
+    elif isinstance(image, (bytes, bytearray)):
+        image = io.BytesIO(image)
+
+    elif not isinstance(image, io.BytesIO):
+        raise ValueError(
+            f"Unsupported processed image type: {type(image).__name__}"
+        )
+
+    image.seek(0)
+    print(
+        f"[DEBUG] Final output type: {type(image).__name__}",
+        flush=True
+    )
 
     return image
 

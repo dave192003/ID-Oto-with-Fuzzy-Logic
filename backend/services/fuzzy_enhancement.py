@@ -41,40 +41,59 @@ def apply_fuzzy_enhancement(image, features=None):
     return enhanced
 
 
+
 def enhance_image(img, parameters):
-    """ Apply enhancement operations to an image based on fuzzy parameters. """
+    """Enhance ID photos while preserving natural skin tones."""
+
+    # 1. Limit denoising to preserve facial details.
+    denoise_strength = float(
+        np.clip(parameters["denoise"], 0.0, 2.0)
+    )
 
     denoised = cv2.fastNlMeansDenoisingColored(
         img,
         None,
-        parameters["denoise"],
-        parameters["denoise"],
+        denoise_strength,
+        denoise_strength,
         7,
-        25
+        21
     )
 
-    # Use stable sharpening kernel
-    sharpen_strength = float(parameters["sharpen"])
+    # 2. Apply mild sharpening.
+    sharpen_strength = float(
+        np.clip(parameters["sharpen"], 0.0, 0.5)
+    )
 
-    kernel = np.array([
-    [0, -sharpen_strength, 0],
-    [-sharpen_strength, 1 + (1 * sharpen_strength), -sharpen_strength],
-    [0, -sharpen_strength, 0]
-    ], dtype=np.float32)
+    blurred = cv2.GaussianBlur(
+        denoised,
+        (0, 0),
+        1.0
+    )
 
-    sharpened = cv2.filter2D(
-    denoised,
-    -1,
-    kernel
+    sharpened = cv2.addWeighted(
+        denoised,
+        1.0 + sharpen_strength,
+        blurred,
+        -sharpen_strength,
+        0
+    )
+
+    # 3. Keep brightness and contrast nearly neutral.
+    alpha = float(
+        np.clip(parameters["alpha"], 0.98, 2.03)
+    )
+    beta = float(
+        np.clip(parameters["beta"], -2.0, 3.0)
     )
 
     enhanced = cv2.convertScaleAbs(
         sharpened,
-        alpha=float(parameters["alpha"]),
-        beta=float(parameters["beta"])
+        alpha=alpha,
+        beta=beta
     )
 
     return enhanced
+
 
 
 def encode_image_png(img_bgr):

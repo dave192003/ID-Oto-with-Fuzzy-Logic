@@ -1,15 +1,15 @@
 # Alpha - contrast adjustment
 ALPHA = {
-    "low": (0.95, 1.00, 1.00),
-    "normal": (1.00, 1.05, 1.10),
-    "high": (1.05, 1.10, 1.15)
+    "low": (1, 1.04, 1.08),
+    "normal": (1.01, 1.05, 1.09),
+    "high": (1.07, 1.1, 1.13)
 }
 
 # Beta - brightness adjustment
 BETA = {
-    "low": (-10, -5, 0),
-    "normal": (-5, 0, 5),
-    "high": (0, 5, 10)
+    "low": (-12, -8, -2),
+    "normal": (-6, -2, 3),
+    "high": (-2, 3, 8)
 }
 
 # Sharpen amount

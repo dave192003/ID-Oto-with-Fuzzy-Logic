@@ -7,7 +7,7 @@ from rembg import remove, new_session
 from PIL import Image, ImageOps
 
 DPI = 300
-MAX_SIZE = 512
+MAX_SIZE = 384
 
 # Load BiRefNet Portrait once when the backend starts
 BG_SESSION = new_session("birefnet-portrait")
