@@ -79,6 +79,9 @@
             <!-- ######### Preview Container ######### -->
             <section class="container" id="previewContainer">
 
+                <!-- ######### Status ######### -->
+                <div class="loading" id="status"></div>
+
                 <!-- ######### Image Preview ######### -->
                 <div class="preview-section">
                     <div class="card">
@@ -100,30 +103,29 @@
                     </div>
                 </div>
 
-                <!-- ######### Print Sheet ######### -->
-                <div id="printSheet" class="print-sheet"></div>
-
                 <!-- ######### Size Selector ######### -->
                 <div class="size-selector">
                     <label for="photoSize">Select ID Size</label>
                     <select id="photoSize">
-                        <option value="1x1">1x1</option>
-                        <option value="1.5x1.5">1.5 x 1.5</option>
-                        <option value="2x2">2x2</option>
-                        <option value="passport">Passport</option>
+                        <option value="1x1">1x1 inch</option>
+                        <option value="1.5x1.5">1.5 x 1.5 inch</option>
+                        <option value="2x2">2x2 inch</option>
+                        <option value="passport">Passport </option>
                     </select>
                 </div>
+
+                <!-- ######### Print Sheet ######### -->
+                <div id="printSheet" class="print-sheet"></div>
 
                 <!-- ######### Buttons ######### -->
                 <div class="buttons">
                     <button type="button" class="process" id="process-button">Process Image</button>
                     <button type="button" class="download" id="download-button">Download</button>
                     <button type="button" class="print-button" id="print-button">Print Photos</button>
-                    <button type="button" class="fuzzy-analysis-btn" id="fuzzy-analysis-button">View Fuzzy Analysis</button>
+                    <!-- <button type="button" class="fuzzy-analysis-btn" id="fuzzy-analysis-button">View Fuzzy Analysis</button> -->
                 </div>
 
-                <!-- ######### Status ######### -->
-                <div class="loading" id="status"></div>
+              
             </section>
 
             <!-- ######### Privacy ######### -->

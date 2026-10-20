@@ -75,11 +75,13 @@ const PHOTO_DIMENSIONS = {
 function showUploadState() {
     uploadArea.classList.remove("done");
     previewContainer.classList.remove("active");
+    document.body.classList.remove("preview-mode");
 }
 
 function showPreviewState() {
     uploadArea.classList.add("done");
     previewContainer.classList.add("active");
+    document.body.classList.add("preview-mode");
 }
 
 function resetProcessedState() {
