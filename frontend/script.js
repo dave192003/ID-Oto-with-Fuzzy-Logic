@@ -14,6 +14,7 @@ const originalPreview = document.getElementById("originalPreview");
 const outputPreview = document.getElementById("outputPreview");
 const status = document.getElementById("status");
 const processButton = document.getElementById("process-button");
+const changeImageButton = document.getElementById("change-image-button");
 const downloadButton = document.getElementById("download-button");
 const printButton = document.getElementById("print-button");
 const fuzzyAnalysisButton = document.getElementById("fuzzy-analysis-button");
@@ -29,6 +30,7 @@ console.log("DOM Elements:", {
     outputPreview,
     status,
     processButton,
+    changeImageButton,
     downloadButton,
     printButton,
     fuzzyAnalysisButton,
@@ -36,7 +38,8 @@ console.log("DOM Elements:", {
     printSheet
 });
 
-const requiredElements = [
+// Elements the page cannot work without.
+const requiredElements = {
     imageInput,
     uploadArea,
     previewContainer,
@@ -46,28 +49,41 @@ const requiredElements = [
     processButton,
     downloadButton,
     printButton,
-    fuzzyAnalysisButton,
     photoSize,
     printSheet
-];
+};
+
+// The fuzzy-analysis button is intentionally commented out in the markup, so it
+// is optional and must not be treated as a missing required element.
+const missingElements = Object.entries(requiredElements)
+    .filter(([, element]) => !element)
+    .map(([name]) => name);
+
+if (missingElements.length) {
+    console.error("Missing required DOM elements:", missingElements);
+}
 
 // ######### Photo Dimensions #########
 const PHOTO_DIMENSIONS = {
     "1x1": {
         width: "1in",
-        height: "1in"
+        height: "1in",
+        ratio: "1 / 1"
     },
     "1.5x1.5": {
         width: "1.5in",
-        height: "1.5in"
+        height: "1.5in",
+        ratio: "1 / 1"
     },
     "2x2": {
         width: "2in",
-        height: "2in"
+        height: "2in",
+        ratio: "1 / 1"
     },
     passport: {
         width: "35mm",
-        height: "45mm"
+        height: "45mm",
+        ratio: "35 / 45"
     }
 };
 
@@ -155,6 +171,26 @@ function handleFileSelect(event) {
     console.log("Upload state changed to PREVIEW state.");
 }
 
+// ######### Change Image Button #########
+// Re-opens the file picker so the user can pick a different photo without
+// leaving the preview screen. The input value is cleared first, otherwise
+// re-picking the very same file would not fire a "change" event.
+if (changeImageButton) {
+    changeImageButton.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log("CHANGE IMAGE BUTTON EVENT");
+
+        if (isProcessing) {
+            console.log("Cannot change image while processing.");
+            return;
+        }
+
+        imageInput.value = "";
+        imageInput.click();
+    });
+}
+
 // ######### Process Button #########
 processButton.addEventListener("click", event => {
     event.preventDefault();
@@ -179,6 +215,9 @@ async function processImage() {
     isProcessing = true;
     processButton.disabled = true;
     processButton.classList.add("active");
+    if (changeImageButton) {
+        changeImageButton.disabled = true;
+    }
     status.textContent = "Processing image...";
 
     try {
@@ -225,6 +264,9 @@ async function processImage() {
             status.textContent = "Processing complete.";
             processButton.disabled = false;
             processButton.classList.remove("active");
+            if (changeImageButton) {
+                changeImageButton.disabled = false;
+            }
             isProcessing = false;
             generatePrintLayout();
             console.log("7. PROCESS FINISHED");
@@ -235,6 +277,9 @@ async function processImage() {
             status.textContent = "Image failed to load.";
             processButton.disabled = false;
             processButton.classList.remove("active");
+            if (changeImageButton) {
+                changeImageButton.disabled = false;
+            }
             isProcessing = false;
         };
 
@@ -246,6 +291,9 @@ async function processImage() {
         status.textContent = "Error processing image.";
         processButton.disabled = false;
         processButton.classList.remove("active");
+        if (changeImageButton) {
+            changeImageButton.disabled = false;
+        }
         isProcessing = false;
     }
 }
@@ -282,6 +330,10 @@ function generatePrintLayout() {
         img.classList.add("print-photo");
         img.style.width = dimensions.width;
         img.style.height = dimensions.height;
+
+        // Keep the selected ID ratio when the preview scales down on screen
+        img.style.aspectRatio = dimensions.ratio;
+
         printSheet.appendChild(img);
     }
 
@@ -436,12 +488,17 @@ printButton.addEventListener("click", event => {
     printPhotos();
 });
 
-fuzzyAnalysisButton.addEventListener("click", event => {
-    event.preventDefault();
-    event.stopPropagation();
+// The fuzzy-analysis button is currently commented out in the markup, so the
+// element may be missing. Guard the listener so its absence cannot break the
+// rest of the page.
+if (fuzzyAnalysisButton) {
+    fuzzyAnalysisButton.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
 
-    goToFuzzyAnalysis();
-});
+        goToFuzzyAnalysis();
+    });
+}
 
 // ######### Page Lifecycle #########
 window.addEventListener("pagehide", () => {

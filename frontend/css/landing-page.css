@@ -252,7 +252,7 @@
     font-size: 1.1rem;
 }
 
-/* PREVIEW CONTAINER (process output) */
+/* PREVIEW CONTAINER (process output)        */
 .container {
     grid-column: 1/-1;
     justify-self: center;
@@ -261,15 +261,52 @@
     background: var(--card-bg);
     padding: clamp(1.5rem, 3vw, 3rem);
     display: none;
-    flex-direction: column;
     border-radius: 20px;
     box-shadow: var(--shadow);
     transition: .3s ease;
 }
 
 .container.active {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: clamp(1rem, 3vw, 2.5rem);
     animation: fade-in-up 0.4s ease backwards;
+}
+
+.container-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+}
+
+.column-left {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    padding: 1rem;
+}
+
+.column-right {
+    grid-column: 2;
+    grid-row: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, .12),
+            0 10px 24px rgba(0, 0, 0, .12);
+    border-radius: 8px;
+    
+}
+
+
+.column-right .print-sheet {
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /* PREVIEW MODE - show only the centered preview container when an image is uploaded */
@@ -277,7 +314,6 @@ body.preview-mode {
     overflow: hidden;
 }
 
-body.preview-mode .navBar-container,
 body.preview-mode .header-container,
 body.preview-mode .right-section,
 body.preview-mode .feature-info-section,
@@ -288,35 +324,37 @@ body.preview-mode .footer-container {
 
 body.preview-mode main {
     display: block;
-    /* min-height: 100vh; */
     height: 100vh;
     overflow-y: auto;
-    padding: 5rem 1rem;
+}
+
+body.preview-mode .left-section {
+    padding: 0;
 }
 
 body.preview-mode .container.active {
-    /* height: auto; */
-    padding: clamp(1rem, 2vw, 2rem);
     width: 90%;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: 1rem;
 }
 
 body.preview-mode .preview-section {
     gap: clamp(1rem, 3vw, 2rem);
     width: 100%;
     margin: 0 auto;
-    grid-column: 1;
 }
 
 /* PREVIEW SECTION (original / processed cards) */
 .preview-section {
     margin-top: clamp(1.5rem, 3vw, 2rem);
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(1rem, 3vw, 3rem);
-   
+    width: 100%;
 }
 
 .output-preview-image {
@@ -356,17 +394,65 @@ body.preview-mode .preview-section {
 
 /*  BUTTONS */
 .buttons {
-    grid-column: 1;
-    grid-row: 4;
     display: flex;
-    gap: clamp(0.5rem, 2vw, 1rem);
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 2rem);
     margin-top: clamp(1rem, 3vw, 1.6rem);
     width: 100%;
 }
 
+.buttons-left {
+    justify-content: flex-start;
+    display: flex;
+}
+
+/* Push the Process button to the lowest point of column 1 */
+.column-left .buttons-left {
+    margin-top: auto;
+}
+
+/* The Process button sits alone in column 1 — keep it a sensible size */
+.buttons-left button {
+    min-width: min(100%, 220px);
+    width: 100%;
+    
+}
+
+/* CHANGE IMAGE BUTTON (left column) */
+.change-image {
+    display: none;
+    background: #0f766e;
+    color: white;
+}
+
+body.preview-mode .change-image {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.change-image:hover {
+    background: #14b8a6;
+    color: rgb(255, 255, 255);
+}
+
+.change-image:disabled:hover {
+    background: #0f766e;
+    color: white;
+}
+
+.buttons-right {
+    justify-content: center;
+}
+
+/* Download + Print share column 2 evenly */
+.buttons-right button {
+    flex: 1 1 150px;
+}
+
 button {
     flex: 1;
-    padding: 1rem 2rem;
+    padding: 1rem;
     border: none;
     cursor: pointer;
     border-radius: clamp(8px, 1.5vw, 10px);
@@ -468,17 +554,24 @@ button:disabled:active {
 
 /* SIZE SELECTOR */
 .size-selector {
-    grid-column: 1;
-    grid-row: 1;
     margin-top: clamp(1rem, 3vw, 1.6rem);
     display: flex;
     flex-direction: column;
     width: 50%;
+    max-width: 100%;
     gap: clamp(0.5rem, 2vw, 0.75rem);
     animation: fade-in-up 0.5s 0.25s ease backwards;
 }
 
+.size-selector label {
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    font-weight: 600;
+    color: rgb(12, 97, 153);
+}
+
 .size-selector select {
+    width: 100%;
+    max-width: 100%;
     padding: 1rem;
     font-size: clamp(0.95rem, 1.5vw, 1rem);
     background: #4755691a;
@@ -497,6 +590,14 @@ button:disabled:active {
     border-radius: 10px;
 }
 
+/* COLUMN HEADER (right column) */
+.column-header {
+    margin: 0 0 clamp(0.5rem, 2vw, 1rem);
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    color: rgb(12, 97, 153);
+    text-align: center;
+}
+
 /*  STATUS / LOADING */
 .loading {
     margin-top: clamp(1rem, 2vw, 1.25rem);
@@ -512,27 +613,62 @@ button:disabled:active {
     border: 1px solid rgba(20, 139, 9, 0.329);
 }
 
+/* Green circle with a white check mark in front of the status message */
+.loading::before {
+    content: "\2713";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    margin-right: 0.6rem;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1;
+    vertical-align: middle;
+}
+
 /*  PRINT LAYOUT  */
 .print-sheet {
-    /* margin-top: clamp(1.5rem, 4vw, 2.5rem); */
     display: grid;
-    grid-column: 2;
-    grid-row: 3/-5;
     grid-template-columns: repeat(2, auto);
     justify-content: center;
-    padding: none;
-    /* margin: 1rem 4rem; */
-    width: 50%;
+    align-content: start;
+    /* gap: clamp(0.5rem, 1.5vw, 1rem); */
+    padding: clamp(0.75rem, 2vw, 1.5rem);
+    width: 100%;
+    min-height: 600px;
     align-self: center;
     justify-self: center;
     border-radius: clamp(10px, 2vw, 15px);
     background: white;
-    /* border: 1px dashed rgba(0, 132, 255, 0.507); */
+    border: 1px dashed rgba(0, 132, 255, 0.507);
+    overflow: hidden;
 }
 
 .print-photo {
     border: 0.1px solid rgba(0, 0, 0, 0.247);
     object-fit: cover;
+    max-width: 100%;
+}
+
+/* On screen the sheet is only a preview, so the photos scale to fill the
+   sheet while keeping the selected ID ratio. The exact inch sizes are
+   restored in the @media print block below. */
+@media screen {
+
+    .print-sheet {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: clamp(260px, 34vw, 460px);
+    }
+
+    .print-photo {
+        width: 100% !important;
+        height: auto !important;
+    }
 }
 
 /* PRIVACY INFO */
@@ -620,16 +756,164 @@ button:disabled:active {
     transform: scale(1.08);
 }
 
+/*  RESPONSIVE
+   ============================================================
+   The preview container is a 2 column grid on large screens.
+   On tablet & mobile it collapses to a single column where
+   column 1 (status, preview, size, Process) stacks on top and
+   column 2 (print sheet, Download + Print) sits underneath.
+   ============================================================ */
+
+/* --- Tablet & below : collapse to a single column --- */
+@media (max-width: 1024px) {
+
+    .container.active {
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(1rem, 4vw, 2rem);
+        min-height: auto;
+    }
+
+    /* Column 1 first, then column 2 underneath it */
+    .column-left {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .column-right {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    body.preview-mode .container.active {
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+    }
+}
+
+/* --- Small tablets --- */
+@media (max-width: 768px) {
+
+    .container {
+        padding: clamp(1rem, 4vw, 1.5rem);
+    }
+
+    .preview-section {
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(0.75rem, 3vw, 1.25rem);
+    }
+
+    .buttons {
+        gap: clamp(0.5rem, 2vw, 1rem);
+    }
+
+    .buttons-right {
+        justify-content: stretch;
+    }
+
+    .buttons-right button {
+        flex: 1 1 140px;
+    }
+
+    .print-sheet {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        min-height: auto;
+    }
+}
+
+/* --- Mobile --- */
+@media (max-width: 600px) {
+
+    .container {
+        padding: clamp(0.75rem, 3.5vw, 1.25rem);
+        border-radius: 15px;
+    }
+
+    .loading {
+        font-size: clamp(0.8rem, 3.4vw, 1rem);
+        padding: 0.75rem;
+    }
+
+    .size-selector {
+        width: 100%;
+    }
+
+    /* Stack the action buttons full width on small screens */
+    .buttons {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.5rem 0 0;
+    }
+
+    .buttons-left button,
+    .buttons-right button {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+
+    .buttons-right {
+        justify-content: stretch;
+    }
+
+    .print-sheet {
+        padding: clamp(0.5rem, 2.5vw, 1rem);
+        border-radius: 10px;
+    }
+
+    .card {
+        padding: 0.75rem;
+    }
+}
+
 /*  PRINT MEDIA QUERY*/
 @media print {
 
     .print-sheet {
         background: white;
         display: grid;
+        grid-template-columns: repeat(2, auto);
+        justify-content: center;
+        align-content: start;
+        width: 100%;
+        max-width: none;
+        min-height: auto;
+        padding: 0;
+        border: none;
+        overflow: visible;
+    }
+
+    /* The print sheet is the only thing that reaches the paper */
+    .container.active,
+    body.preview-mode .container.active {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-height: auto;
+        padding: 0;
+        margin: 0;
+        background: white;
+        box-shadow: none;
+    }
+
+    body.preview-mode main {
+        display: block;
+        height: auto;
+        overflow: visible;
+        padding: 0;
+    }
+
+    body.preview-mode {
+        overflow: visible;
+    }
+
+    .container-column {
+        display: block;
+        width: 100%;
     }
 
     /* Not included parts for printing */
     h1,
+    .left-section .upload-area,
+    .upload-area,
     .upload-box,
     .left-section .header-container,
     .right-section,
@@ -641,9 +925,15 @@ button:disabled:active {
     .buttons,
     .navBar-container,
     .footer-container,
+    .column-header,
     .loading {
         display: none;
         box-shadow: none;
+    }
+
+    /* Column 1 holds only preview/controls — it must not reach the paper */
+    .column-left {
+        display: none;
     }
 
     .container {

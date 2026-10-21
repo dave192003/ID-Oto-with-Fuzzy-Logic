@@ -21,3 +21,6 @@ Thumbs.db
 
 # Docker temp
 *.log
+
+# Temporary verification harness (local only)
+.tmp-verify/

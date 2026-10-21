@@ -79,53 +79,70 @@
             <!-- ######### Preview Container ######### -->
             <section class="container" id="previewContainer">
 
-                <!-- ######### Status ######### -->
-                <div class="loading" id="status"></div>
+                <!-- ######### Column 1 : Status, Preview, Size & Process ######### -->
+                <div class="container-column column-left">
 
-                <!-- ######### Image Preview ######### -->
-                <div class="preview-section">
-                    <div class="card">
-                        <h3>Original</h3>
-                        <img
-                            class="preview-image"
-                            id="originalPreview"
-                            alt="Original image preview"
-                        >
+                    <!-- ######### Status ######### -->
+                    <div class="loading" id="status"></div>
+
+                    <!-- ######### Image Preview ######### -->
+                    <div class="preview-section">
+                        <div class="card">
+                            <h3>Original</h3>
+                            <img
+                                class="preview-image"
+                                id="originalPreview"
+                                alt="Original image preview"
+                            >
+                        </div>
+                        <div class="card">
+                            <h3>Processed</h3>
+                            <img
+                                class="output-preview-image"
+                                id="outputPreview"
+                                alt="Processed image preview"
+                                style="display: none;"
+                            >
+                        </div>
                     </div>
-                    <div class="card">
-                        <h3>Processed</h3>
-                        <img
-                            class="output-preview-image"
-                            id="outputPreview"
-                            alt="Processed image preview"
-                            style="display: none;"
-                        >
+
+                    <!-- ######### Size Selector ######### -->
+                    <div class="size-selector">
+                        <label for="photoSize">Select ID Size</label>
+                        <select id="photoSize">
+                            <option value="1x1">1x1 inch</option>
+                            <option value="1.5x1.5">1.5 x 1.5 inch</option>
+                            <option value="2x2">2x2 inch</option>
+                            <option value="passport">Passport </option>
+                        </select>
                     </div>
+
+                    <!-- ######### Process & Change Image Buttons ######### -->
+                    <div class="buttons buttons-left">
+                        <button type="button" class="process" id="process-button">Process Image</button>
+                        <button type="button" class="change-image" id="change-image-button">Change Image</button>
+                        <!-- <button type="button" class="fuzzy-analysis-btn" id="fuzzy-analysis-button">View Fuzzy Analysis</button> -->
+                    </div>
+
                 </div>
 
-                <!-- ######### Size Selector ######### -->
-                <div class="size-selector">
-                    <label for="photoSize">Select ID Size</label>
-                    <select id="photoSize">
-                        <option value="1x1">1x1 inch</option>
-                        <option value="1.5x1.5">1.5 x 1.5 inch</option>
-                        <option value="2x2">2x2 inch</option>
-                        <option value="passport">Passport </option>
-                    </select>
+                <!-- ######### Column 2 : Print Sheet & Output Actions ######### -->
+                <div class="container-column column-right">
+
+                    <!-- ######### Column Header ######### -->
+                    <h3 class="column-header">Ready for Printing</h3>
+
+                    <!-- ######### Print Sheet ######### -->
+                    <div id="printSheet" class="print-sheet"></div>
+
+                    <!-- ######### Download & Print Buttons ######### -->
+                    <div class="buttons buttons-right">
+                        <button type="button" class="download" id="download-button">Download</button>
+                        <button type="button" class="print-button" id="print-button">Print Photos</button>
+                    </div>
+
                 </div>
 
-                <!-- ######### Print Sheet ######### -->
-                <div id="printSheet" class="print-sheet"></div>
-
-                <!-- ######### Buttons ######### -->
-                <div class="buttons">
-                    <button type="button" class="process" id="process-button">Process Image</button>
-                    <button type="button" class="download" id="download-button">Download</button>
-                    <button type="button" class="print-button" id="print-button">Print Photos</button>
-                    <!-- <button type="button" class="fuzzy-analysis-btn" id="fuzzy-analysis-button">View Fuzzy Analysis</button> -->
-                </div>
-
-              
             </section>
 
             <!-- ######### Privacy ######### -->
