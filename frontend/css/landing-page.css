@@ -296,11 +296,7 @@
     flex-direction: column;
     justify-content: center;
     padding: 1rem;
-    box-shadow:
-            0 6px 12px rgba(0, 0, 0, .12),
-            0 10px 24px rgba(0, 0, 0, .12);
     border-radius: 8px;
-    
 }
 
 
@@ -643,9 +639,7 @@ button:disabled:active {
     min-height: 600px;
     align-self: center;
     justify-self: center;
-    border-radius: clamp(10px, 2vw, 15px);
     background: white;
-    border: 1px dashed rgba(0, 132, 255, 0.507);
     overflow: hidden;
 }
 
