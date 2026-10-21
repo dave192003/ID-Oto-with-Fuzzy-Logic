@@ -121,9 +121,5 @@ Or use VS Code Live Server. The frontend will be available at http://localhost:5
 
 ## Photo Sizes
 
-| Size | Dimensions (300 DPI) |
-|------|---------------------|
-| 1x1 | 300 x 300 px |
-| 1.5x1.5 | 450 x 450 px |
-| 2x2 | 600 x 600 px |
-| Passport | 413 x 531 px |
+<img width="2075" height="758" alt="Photo Sizes for ID Printing" src="https://github.com/user-attachments/assets/c4b4ef6e-c6f1-489a-abd2-23d307d47bd2" />
+
