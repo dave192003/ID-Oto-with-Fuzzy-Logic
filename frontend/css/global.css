@@ -108,7 +108,9 @@ main {
 }
 
 .footer-container p {
-    font-size: clamp(15px, 10vw, 20px);
+    font-size: clamp(15px, 10vw, 15px);
+    color: rgba(255, 255, 255, 0.692);
+    margin: 1rem;
 }
 
 /* ANIMATIONS (shared keyframes)

@@ -682,6 +682,7 @@ button:disabled:active {
     width: 93%;
     grid-column: 1/ -1;
     gap: 1rem;
+    margin: 1rem;
     justify-content:space-between;
     padding: 0 3rem;
     border: 1px solid white;
