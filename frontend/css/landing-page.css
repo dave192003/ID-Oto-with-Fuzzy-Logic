@@ -538,16 +538,6 @@ button:disabled:active {
     background: #666666;
 }
 
-.fuzzy-analysis-btn {
-    background: #8b5cf6;
-    color: white;
-}
-
-.fuzzy-analysis-btn:hover {
-    background: #7c3aed;
-    color: white;
-}
-
 /* SIZE SELECTOR */
 .size-selector {
     margin-top: clamp(1rem, 3vw, 1.6rem);
@@ -578,9 +568,7 @@ button:disabled:active {
 }
 
 .size-selector select:hover {
-    padding: clamp(0.75rem, 2vw, 0.9rem);
-    font-size: clamp(0.95rem, 1.5vw, 1rem);
-    background: #475569c0;
+    background: #47556954;
     color: white;
     border: none;
     border-radius: 10px;
@@ -649,9 +637,6 @@ button:disabled:active {
     max-width: 100%;
 }
 
-/* On screen the sheet is only a preview, so the photos scale to fill the
-   sheet while keeping the selected ID ratio. The exact inch sizes are
-   restored in the @media print block below. */
 @media screen {
 
     .print-sheet {
@@ -688,30 +673,31 @@ button:disabled:active {
     background: transparent;
     width: 3%;
     padding: 0;
-    height: 25px;
+    height: 1rem;
 }
 
 /*  FEATURES INFO */
 .feature-info-section {
     display: flex;
-    flex-direction: row;
     width: 90%;
     grid-column: 1/ -1;
-    gap: 10rem;
+    gap: 5rem;
     padding: 0 8rem;
     background: white;
     justify-self: center;
+    flex-wrap: wrap;
     border-radius: 30px;
     animation: fade-in-up 0.6s 0.25s ease backwards;
 }
 
 .feature-info-section .box {
     display: flex;
-    gap: 30px;
+    gap: 1rem;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     width: 15%;
+    height: auto;
     transition: transform 0.3s ease;
     animation: fade-in-up 0.5s ease backwards;
 }
@@ -737,7 +723,7 @@ button:disabled:active {
 }
 
 .feature-info-section .box h3 {
-    font-size: clamp(12px, 10vw, 30px);
+    font-size: clamp(12px, 10vw, 20px);
 }
 
 .feature-info-section .box img {
@@ -750,16 +736,19 @@ button:disabled:active {
     transform: scale(1.08);
 }
 
-/*  RESPONSIVE
-   ============================================================
-   The preview container is a 2 column grid on large screens.
-   On tablet & mobile it collapses to a single column where
-   column 1 (status, preview, size, Process) stacks on top and
-   column 2 (print sheet, Download + Print) sits underneath.
-   ============================================================ */
 
 /* --- Tablet & below : collapse to a single column --- */
 @media (max-width: 1024px) {
+
+    main {
+        grid-template-columns: 1fr;
+    }
+        
+    .left-section {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem !important;
+    }
 
     .container.active {
         grid-template-columns: minmax(0, 1fr);
@@ -787,9 +776,20 @@ button:disabled:active {
 /* --- Small tablets --- */
 @media (max-width: 768px) {
 
+    main{
+        grid-template-columns: 1fr;
+        
+    }
+
+    .left-section{
+        display: flex;
+        flex-direction: column;
+        padding: 2rem !important;
+    }
     .container {
         padding: clamp(1rem, 4vw, 1.5rem);
     }
+
 
     .preview-section {
         grid-template-columns: minmax(0, 1fr);
