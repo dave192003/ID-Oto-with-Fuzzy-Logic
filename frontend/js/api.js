@@ -1,9 +1,10 @@
 const API_BASE_URL = "http://localhost:8000/api";
-export async function enhanceImage(file, type = "2x2") {
+export async function enhanceImage(file, type = "2x2", mode = "fast") {
     console.log("[FRONTEND] Processing started");
     const formData = new FormData();
     formData.append("image", file);
     formData.append("type", type);
+    formData.append("bgMode", mode);
     console.log("[FRONTEND] API request sent");
     const response = await fetch(`${API_BASE_URL}/process`, {
         method: "POST",
@@ -65,9 +66,10 @@ export async function analyzeImage(file) {
 }
 
 // Remove the background
-export async function removeBackground(file) {
+export async function removeBackground(file, mode = "fast") {
     const formData = new FormData();
     formData.append("image", file);
+    formData.append("bgMode", mode);
 
     const response = await fetch(`${API_BASE_URL}/remove-bg`, {
         method: "POST",

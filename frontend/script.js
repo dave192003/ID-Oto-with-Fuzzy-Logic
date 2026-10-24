@@ -234,7 +234,8 @@ async function processImage() {
         console.log("1. BEFORE API");
         const blob = await enhanceImage(
             selectedFile,
-            photoSize.value
+            photoSize.value,
+            selectedBgMode
         );
 
         console.log("2. API RETURNED");
@@ -626,6 +627,7 @@ if (bgModeFast) {
         if (selectedBgMode !== "fast") {
             selectedBgMode = "fast";
             updateBgModeSelection();
+            console.log(`[BG MODE] Switched to: ${selectedBgMode} (lighter, faster model)`);
         }
     });
 }
@@ -635,6 +637,7 @@ if (bgModeHigh) {
         if (selectedBgMode !== "high") {
             selectedBgMode = "high";
             updateBgModeSelection();
+            console.log(`[BG MODE] Switched to: ${selectedBgMode} (heavier, high-quality model)`);
         }
     });
 }
@@ -692,9 +695,6 @@ function hideAllBgModeDetails() {
     document.querySelectorAll(".bg-mode-details.open").forEach((panel) => {
         panel.classList.remove("open");
     });
-    document.querySelectorAll(".bg-mode-card.bg-mode-expanded").forEach((card) => {
-        card.classList.remove("bg-mode-expanded");
-    });
 }
 
 bgModeInfoButtons.forEach((info) => {
@@ -708,7 +708,6 @@ bgModeInfoButtons.forEach((info) => {
         hideAllBgModeDetails(); // close any other open detail panel
         if (!isOpen) {
             panel.classList.add("open");
-            card.classList.add("bg-mode-expanded");
         }
     });
 });

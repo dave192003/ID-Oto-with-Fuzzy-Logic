@@ -10,7 +10,8 @@ DPI = 300
 MAX_SIZE = 384
 
 # Load BiRefNet Portrait once when the backend starts
-BG_SESSION = new_session("birefnet-portrait")
+BG_SESSION_HQ = new_session("birefnet-portrait")
+BG_SESSION_FAST = new_session("u2netp")
 
 
 def _log_image(tag, arr):
@@ -76,11 +77,23 @@ def refine_edges(img, erode_size=2, blur_size=3):
 
 
 
-def remove_background(image):
-    """Remove background using BiRefNet with reduced memory usage."""
-    t0 = time.time()
-    _log_image("input", image)
+def remove_background(image, mode = "fast"):
+    """Remove background using BiRefNet with reduced memory usage.
 
+    Modes:
+      - "fast"        : lightweight u2netp model (quick, lower detail)
+      - "high" / "high-quality" : heavier birefnet-portrait model (slower, higher detail)
+    """
+    t0 = time.time()
+
+    if mode == "fast":
+        session = BG_SESSION_FAST
+    elif mode in ("high", "high-quality"):
+        session = BG_SESSION_HQ
+    else:
+        raise ValueError(f"Invalid background removal mode: {mode}")
+    
+    _log_image("input", image)
     image_bytes = _to_bytes(image)
 
     with Image.open(io.BytesIO(image_bytes)) as source:
@@ -103,7 +116,7 @@ def remove_background(image):
 
     output_transparent_bytes = remove(
         input_buffer.getvalue(),
-        session=BG_SESSION,
+        session=session,
         alpha_matting=False
     )
 

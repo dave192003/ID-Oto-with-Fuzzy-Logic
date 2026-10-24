@@ -18,12 +18,12 @@ import io
 import cv2
 import numpy as np
 
-def process_id_photo(image, photo_type):
+def process_id_photo(image, photo_type, bg_mode="fast"):
     image = validate_image(image)
     print("[DEBUG] Stage 1: Image validated", flush=True)
 
-    image = remove_background(image)
-    print("[DEBUG] Stage 3: Background removed", flush=True)
+    image = remove_background(image, mode=bg_mode)
+    print(f"[DEBUG] Stage 3: Background removed (mode={bg_mode})", flush=True)
 
     image = crop_id_photo(image, photo_type)
     print("[DEBUG] Stage 2: ID photo cropped", flush=True)
@@ -68,8 +68,9 @@ def process_image():
             "error": "Missing image file"
         }), 400
 
-    # Get the photo type
+    # Get the photo type and background removal mode
     photo_type = request.form.get("type", "2x2")
+    bg_mode = request.form.get("bgMode", "fast")
 
     if photo_type not in VALID_PHOTO_TYPES:
         print(f"[BACKEND] Invalid photo type: {photo_type}", flush=True)
@@ -80,11 +81,11 @@ def process_image():
 
     # Read the uploaded image
     file = request.files["image"].read()
-    print(f"[BACKEND] Image received ({len(file)} bytes)", flush=True)
+    print(f"[BACKEND] Image received ({len(file)} bytes), bgMode={bg_mode}", flush=True)
 
     try:
         # Run the complete pipeline
-        output = process_id_photo(file, photo_type)
+        output = process_id_photo(file, photo_type, bg_mode=bg_mode)
 
         print("[BACKEND] Returning processed image", flush=True)
         return send_file(
@@ -118,12 +119,13 @@ def remove_bg():
             "error": "Missing image file"
         }), 400
 
+    bg_mode = request.form.get("bgMode", "fast")
     input_data = request.files["image"].read()
-    print(f"[BACKEND] Image received ({len(input_data)} bytes)", flush=True)
+    print(f"[BACKEND] Image received ({len(input_data)} bytes), bgMode={bg_mode}", flush=True)
 
     try:
-        output = remove_background(input_data)
-        print("[BACKEND] Background removed", flush=True)
+        output = remove_background(input_data, mode=bg_mode)
+        print(f"[BACKEND] Background removed (mode={bg_mode})", flush=True)
         return send_file(output, mimetype="image/jpeg")
 
     except Exception as e:

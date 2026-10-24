@@ -256,7 +256,7 @@ def crop_id_photo(image, photo_type):
     center_y = y + h // 2
 
     left = center_x - crop_width // 2
-    top = center_y - int(crop_height * 0.43)
+    top = center_y - int(crop_height * 0.45)
 
     right = left + crop_width
     bottom = top + crop_height
