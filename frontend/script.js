@@ -12,6 +12,7 @@ const uploadArea = document.getElementById("uploadArea");
 const previewContainer = document.getElementById("previewContainer");
 const originalPreview = document.getElementById("originalPreview");
 const outputPreview = document.getElementById("outputPreview");
+const processedSkeleton = document.getElementById("processedSkeleton");
 const status = document.getElementById("status");
 const processButton = document.getElementById("process-button");
 const changeImageButton = document.getElementById("change-image-button");
@@ -110,6 +111,9 @@ function resetProcessedState() {
 
     outputPreview.removeAttribute("src");
     outputPreview.style.display = "none";
+    if (processedSkeleton) {
+        processedSkeleton.style.display = "none";
+    }
     printSheet.innerHTML = "";
 }
 
@@ -220,6 +224,12 @@ async function processImage() {
     }
     status.textContent = "Processing image...";
 
+    // Show skeleton loader on the processed image container while processing
+    if (processedSkeleton) {
+        processedSkeleton.style.display = "block";
+    }
+    outputPreview.style.display = "none";
+
     try {
         console.log("1. BEFORE API");
         const blob = await enhanceImage(
@@ -260,6 +270,9 @@ async function processImage() {
         outputPreview.onload = () => {
             console.log("[FRONTEND] Preview updated");
             console.log("6. PROCESSED IMAGE LOADED");
+            if (processedSkeleton) {
+                processedSkeleton.style.display = "none";
+            }
             outputPreview.style.display = "block";
             status.textContent = "Processing complete.";
             processButton.disabled = false;
@@ -274,6 +287,9 @@ async function processImage() {
 
         outputPreview.onerror = error => {
             console.error("PROCESSED IMAGE LOAD ERROR", error);
+            if (processedSkeleton) {
+                processedSkeleton.style.display = "none";
+            }
             status.textContent = "Image failed to load.";
             processButton.disabled = false;
             processButton.classList.remove("active");
@@ -288,6 +304,9 @@ async function processImage() {
 
     } catch (error) {
         console.error("PROCESS ERROR:", error);
+        if (processedSkeleton) {
+            processedSkeleton.style.display = "none";
+        }
         status.textContent = "Error processing image.";
         processButton.disabled = false;
         processButton.classList.remove("active");
@@ -529,4 +548,177 @@ window.printPhotos = printPhotos;
 window.goToFuzzyAnalysis = goToFuzzyAnalysis;
 
 // ######### Initial State #########
-showUploadState();
+showUploadState();// ######### Background Removal Mode Selection #########
+const bgModeFast = document.getElementById("bgModeFast");
+const bgModeHigh = document.getElementById("bgModeHigh");
+const bgModalOverlay = document.getElementById("bgModalOverlay");
+const bgModalClose = document.getElementById("bgModalClose");
+
+// Currently selected removal mode: "fast" or "high"
+let selectedBgMode = "fast";
+// ######### Background Removal Mode Features (per category) #########
+const bgModeFeatures = {
+    fast: {
+        title: "Fast Removal",
+        items: [
+            { label: "Supporting label", value: "Quick processing" },
+            { label: "Priority", value: "Speed" },
+            { label: "Processing time", value: "Shorter" },
+            { label: "Recommended for", value: "Simple images" }
+        ]
+    },
+    high: {
+        title: "High-Quality Removal",
+        items: [
+            { label: "Supporting label", value: "Enhanced detail" },
+            { label: "Priority", value: "Accuracy and detail" },
+            { label: "Processing time", value: "Longer" },
+            { label: "Recommended for", value: "ID photos and complex edges" }
+        ]
+    }
+};
+
+// Open per-category modal when an info icon is clicked
+document.querySelectorAll(".bg-mode-info").forEach((info) => {
+    info.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const card = info.closest(".bg-mode-card");
+        const mode = card ? card.getAttribute("data-mode") : "fast";
+        const data = bgModeFeatures[mode] || bgModeFeatures.fast;
+        const titleEl = document.getElementById("bgModalTitle");
+        const contentEl = document.getElementById("bgModalContent");
+        if (titleEl) titleEl.textContent = data.title;
+        if (contentEl) {
+            contentEl.innerHTML = data.items
+                .map((item) => `<p><strong>${item.label}:</strong> ${item.value}</p>`)
+                .join("");
+        }
+        if (bgModalOverlay) {
+            bgModalOverlay.removeAttribute("hidden");
+            bgModalOverlay.setAttribute("aria-hidden", "false");
+            bgModalOverlay.focus();
+        }
+    });
+});
+
+
+// Update the visual selected state of the mode cards
+function updateBgModeSelection() {
+    if (bgModeFast && bgModeHigh) {
+        if (selectedBgMode === "fast") {
+            bgModeFast.classList.add("bg-mode-selected");
+            bgModeFast.setAttribute("aria-pressed", "true");
+            bgModeHigh.classList.remove("bg-mode-selected");
+            bgModeHigh.setAttribute("aria-pressed", "false");
+        } else {
+            bgModeHigh.classList.add("bg-mode-selected");
+            bgModeHigh.setAttribute("aria-pressed", "true");
+            bgModeFast.classList.remove("bg-mode-selected");
+            bgModeFast.setAttribute("aria-pressed", "false");
+        }
+        console.log(`[BG MODE] Selected: ${selectedBgMode}`);
+    }
+}
+
+// Toggle selection when a mode card is clicked
+if (bgModeFast) {
+    bgModeFast.addEventListener("click", () => {
+        if (selectedBgMode !== "fast") {
+            selectedBgMode = "fast";
+            updateBgModeSelection();
+        }
+    });
+}
+
+if (bgModeHigh) {
+    bgModeHigh.addEventListener("click", () => {
+        if (selectedBgMode !== "high") {
+            selectedBgMode = "high";
+            updateBgModeSelection();
+        }
+    });
+}
+
+// Open the comparison modal when an info icon is clicked
+document.querySelectorAll(".bg-mode-info").forEach((info) => {
+    info.addEventListener("click", () => {
+        if (bgModalOverlay) {
+            bgModalOverlay.removeAttribute("hidden");
+            bgModalOverlay.setAttribute("aria-hidden", "false");
+            bgModalOverlay.focus();
+        }
+    });
+});
+
+// Close modal via close button
+if (bgModalClose) {
+    bgModalClose.addEventListener("click", () => {
+        closeBgModal();
+    });
+}
+
+// Close modal when clicking the overlay background
+if (bgModalOverlay) {
+    bgModalOverlay.addEventListener("click", (event) => {
+        if (event.target === bgModalOverlay) {
+            closeBgModal();
+        }
+    });
+}
+
+// Close modal on Escape key
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && bgModalOverlay && !bgModalOverlay.hasAttribute("hidden")) {
+        closeBgModal();
+    }
+});
+
+function closeBgModal() {
+    if (bgModalOverlay) {
+        bgModalOverlay.setAttribute("hidden", "");
+        bgModalOverlay.setAttribute("aria-hidden", "true");
+    }
+}
+
+// Initialize selection state on load
+updateBgModeSelection();
+
+// ######### Background Removal Mode Details (inline) #########
+// Shows the per-card details with a smooth animation when the question-mark
+// icon is clicked, and hides them when clicking anywhere else on the screen.
+const bgModeInfoButtons = document.querySelectorAll(".bg-mode-info");
+
+function hideAllBgModeDetails() {
+    document.querySelectorAll(".bg-mode-details.open").forEach((panel) => {
+        panel.classList.remove("open");
+    });
+    document.querySelectorAll(".bg-mode-card.bg-mode-expanded").forEach((card) => {
+        card.classList.remove("bg-mode-expanded");
+    });
+}
+
+bgModeInfoButtons.forEach((info) => {
+    info.addEventListener("click", (event) => {
+        event.stopPropagation(); // prevent card selection toggle & immediate close
+        const card = info.closest(".bg-mode-card");
+        if (!card) return;
+        const panel = card.querySelector(".bg-mode-details");
+        if (!panel) return;
+        const isOpen = panel.classList.contains("open");
+        hideAllBgModeDetails(); // close any other open detail panel
+        if (!isOpen) {
+            panel.classList.add("open");
+            card.classList.add("bg-mode-expanded");
+        }
+    });
+});
+
+// Hide details when clicking any part of the screen outside them
+document.addEventListener("click", (event) => {
+    if (
+        !event.target.closest(".bg-mode-details") &&
+        !event.target.closest(".bg-mode-info")
+    ) {
+        hideAllBgModeDetails();
+    }
+});

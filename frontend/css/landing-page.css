@@ -360,7 +360,44 @@ body.preview-mode .preview-section {
         0 24px 48px rgba(0, 0, 0, 0.13);
     padding: none;
     object-fit: cover;
-    
+    width: 100%;
+    height: 100%;
+}
+
+/* Processed image skeleton loader shown while processing */
+.processed-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f2f2f2;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.processed-skeleton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        #ececec 0%,
+        #dcdcdc 50%,
+        #ececec 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite ease-in-out;
+    display: none;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 .card {
@@ -944,5 +981,235 @@ button:disabled:active {
     /* Removed box shadow */
     .container.active {
         box-shadow: none;
+    }
+}
+/* ######### BACKGROUND REMOVAL MODE SELECTION ######### */
+.bg-mode-section {
+    margin-top: clamp(1rem, 3vw, 1.6rem);
+    animation: fade-in-up 0.5s 0.3s ease backwards;
+}
+
+.bg-mode-label {
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    font-weight: 600;
+    color: rgb(12, 97, 153);
+    margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+    display: block;
+}
+
+.bg-mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.75rem, 2vw, 1rem);
+}
+
+.bg-mode-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background: #ffffff;
+    border: 2px solid rgba(18, 73, 124, 0.2);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    text-align: left;
+    height: 50px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.bg-mode-card.bg-mode-expanded {
+    height: auto;
+}
+
+.bg-mode-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 6px 16px rgba(0, 129, 214, 0.12);
+    transform: translateY(-2px);
+}
+
+.bg-mode-card.bg-mode-selected {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, #e6f4ff 0%, #ccebff 100%);
+    box-shadow: 0 6px 16px rgba(0, 129, 214, 0.18);
+}
+
+.bg-mode-card.bg-mode-selected .bg-mode-title {
+    color: var(--primary);
+}
+
+.bg-mode-info {
+    position: absolute;
+    top: clamp(0.75rem, 2vw, 1rem);
+    right: clamp(0.75rem, 2vw, 1rem);
+    width: clamp(18px, 3vw, 24px);
+    height: clamp(18px, 3vw, 24px);
+    background: #eefcff;
+    border: 1.5px solid var(--primary);
+    border-radius: 50%;
+    color: var(--primary);
+    font-size: clamp(12px, 2vw, 14px);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.bg-mode-info:hover {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.bg-mode-header {
+    margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+.bg-mode-title {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-weight: 700;
+    color: rgb(6, 53, 85);
+}
+
+.bg-mode-details {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 1vw, 0.6rem);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+}
+
+.bg-mode-details.open {
+    max-height: 900px;
+    opacity: 1;
+}
+
+.bg-mode-detail {
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+    color: #5a5a5a;
+    line-height: 1.4;
+}
+
+.bg-mode-detail-label {
+    font-weight: 600;
+    color: rgb(12, 97, 153);
+}
+
+.bg-mode-card:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* BACKGROUND REMOVAL MODE MODAL*/
+.bg-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 3vw, 2rem);
+}
+
+.bg-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: zoom-in 0.25s ease;
+}
+
+.bg-modal-close {
+    position: absolute;
+    top: clamp(1rem, 2vw, 1.5rem);
+    right: clamp(1rem, 2vw, 1.5rem);
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #f2f2f2;
+    border-radius: 50%;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #666666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: all 0.2s ease;
+    z-index: 1;
+}
+
+.bg-modal-close:hover {
+    background: #e0e0e0;
+    color: #333333;
+}
+
+.bg-modal-close:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.bg-modal > h2 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    color: rgb(6, 53, 85);
+    padding: clamp(1rem, 2vw, 1.5rem);
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Mobile: stack the mode cards */
+@media (max-width: 600px) {
+    .bg-mode-grid {
+        grid-template-columns: 1fr;
+    }
+    .bg-mode-card {
+        min-height: auto;
+    }
+    .bg-modal {
+        max-height: 95vh;
+        margin: clamp(0.5rem, 2vw, 1rem);
+    }
+    
+}
+
+/* Hide modal contents when printing */
+@media print {
+    .bg-modal-overlay,
+    .bg-modal {
+        display: none !important;
+    }
+    .bg-mode-section {
+        display: none !important;
     }
 }
