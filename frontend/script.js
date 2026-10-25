@@ -552,8 +552,6 @@ window.goToFuzzyAnalysis = goToFuzzyAnalysis;
 showUploadState();// ######### Background Removal Mode Selection #########
 const bgModeFast = document.getElementById("bgModeFast");
 const bgModeHigh = document.getElementById("bgModeHigh");
-const bgModalOverlay = document.getElementById("bgModalOverlay");
-const bgModalClose = document.getElementById("bgModalClose");
 
 // Currently selected removal mode: "fast" or "high"
 let selectedBgMode = "fast";
@@ -578,30 +576,6 @@ const bgModeFeatures = {
         ]
     }
 };
-
-// Open per-category modal when an info icon is clicked
-document.querySelectorAll(".bg-mode-info").forEach((info) => {
-    info.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const card = info.closest(".bg-mode-card");
-        const mode = card ? card.getAttribute("data-mode") : "fast";
-        const data = bgModeFeatures[mode] || bgModeFeatures.fast;
-        const titleEl = document.getElementById("bgModalTitle");
-        const contentEl = document.getElementById("bgModalContent");
-        if (titleEl) titleEl.textContent = data.title;
-        if (contentEl) {
-            contentEl.innerHTML = data.items
-                .map((item) => `<p><strong>${item.label}:</strong> ${item.value}</p>`)
-                .join("");
-        }
-        if (bgModalOverlay) {
-            bgModalOverlay.removeAttribute("hidden");
-            bgModalOverlay.setAttribute("aria-hidden", "false");
-            bgModalOverlay.focus();
-        }
-    });
-});
-
 
 // Update the visual selected state of the mode cards
 function updateBgModeSelection() {
@@ -642,82 +616,6 @@ if (bgModeHigh) {
     });
 }
 
-// Open the comparison modal when an info icon is clicked
-document.querySelectorAll(".bg-mode-info").forEach((info) => {
-    info.addEventListener("click", () => {
-        if (bgModalOverlay) {
-            bgModalOverlay.removeAttribute("hidden");
-            bgModalOverlay.setAttribute("aria-hidden", "false");
-            bgModalOverlay.focus();
-        }
-    });
-});
-
-// Close modal via close button
-if (bgModalClose) {
-    bgModalClose.addEventListener("click", () => {
-        closeBgModal();
-    });
-}
-
-// Close modal when clicking the overlay background
-if (bgModalOverlay) {
-    bgModalOverlay.addEventListener("click", (event) => {
-        if (event.target === bgModalOverlay) {
-            closeBgModal();
-        }
-    });
-}
-
-// Close modal on Escape key
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && bgModalOverlay && !bgModalOverlay.hasAttribute("hidden")) {
-        closeBgModal();
-    }
-});
-
-function closeBgModal() {
-    if (bgModalOverlay) {
-        bgModalOverlay.setAttribute("hidden", "");
-        bgModalOverlay.setAttribute("aria-hidden", "true");
-    }
-}
-
 // Initialize selection state on load
 updateBgModeSelection();
 
-// ######### Background Removal Mode Details (inline) #########
-// Shows the per-card details with a smooth animation when the question-mark
-// icon is clicked, and hides them when clicking anywhere else on the screen.
-const bgModeInfoButtons = document.querySelectorAll(".bg-mode-info");
-
-function hideAllBgModeDetails() {
-    document.querySelectorAll(".bg-mode-details.open").forEach((panel) => {
-        panel.classList.remove("open");
-    });
-}
-
-bgModeInfoButtons.forEach((info) => {
-    info.addEventListener("click", (event) => {
-        event.stopPropagation(); // prevent card selection toggle & immediate close
-        const card = info.closest(".bg-mode-card");
-        if (!card) return;
-        const panel = card.querySelector(".bg-mode-details");
-        if (!panel) return;
-        const isOpen = panel.classList.contains("open");
-        hideAllBgModeDetails(); // close any other open detail panel
-        if (!isOpen) {
-            panel.classList.add("open");
-        }
-    });
-});
-
-// Hide details when clicking any part of the screen outside them
-document.addEventListener("click", (event) => {
-    if (
-        !event.target.closest(".bg-mode-details") &&
-        !event.target.closest(".bg-mode-info")
-    ) {
-        hideAllBgModeDetails();
-    }
-});

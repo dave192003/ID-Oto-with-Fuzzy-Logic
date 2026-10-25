@@ -106,57 +106,43 @@
                         </div></div>
                     </div>
 
-                    <!-- ######### Size Selector ######### -->
-                    <div class="size-selector">
-                        <label for="photoSize">Select ID Size</label>
-                        <select id="photoSize">
-                            <option value="1x1">1x1 inch</option>
-                            <option value="1.5x1.5">1.5 x 1.5 inch</option>
-                            <option value="2x2">2x2 inch</option>
-                            <option value="passport">Passport </option>
-                        </select>
-                    </div>
-
-                    <!-- ######### Background Removal Mode ######### -->
-                    <div class="bg-mode-section">
-                        <label class="bg-mode-label">Choose Background Removal Mode</label>
-                        <div class="bg-mode-grid" id="bgModeGrid">
-                            <button
-                                type="button"
-                                class="bg-mode-card bg-mode-selected"
-                                role="radio" 
-                                aria-pressed="true" 
-                                data-mode="fast" 
-                                id="bgModeFast"
-                                onclick = >
-                                <span class="bg-mode-info" aria-label="Fast Removal info">?</span>
-                                <div class="bg-mode-header">
-                                    <span class="bg-mode-title">Fast Removal</span>
-                                </div>
-                                <div class="bg-mode-details">
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Supporting label:</span> Quick processing</div>
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Priority:</span> Speed</div>
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Processing time:</span> Shorter</div>
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Recommended for:</span> Simple images</div>
-                                </div>
-                                <input type="hidden" name="bgMode" value="fast">
-                            </button>
-                            <button type="button" class="bg-mode-card" role="radio" aria-pressed="false" data-mode="high" id="bgModeHigh">
-                                <span class="bg-mode-info" aria-label="High-Quality Removal info">?</span>
-                                <div class="bg-mode-header">
-                                    <span class="bg-mode-title">High-Quality Removal</span>
-                                </div>
-                                <div class="bg-mode-details">
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Supporting label:</span> Enhanced detail</div>
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Priority:</span> Accuracy and detail</div>
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Processing time:</span> Longer</div>
-                                    <div class="bg-mode-detail"><span class="bg-mode-detail-label">Recommended for:</span> ID photos and complex edges</div>
-                                </div>
-                                <input type="hidden" name="bgMode" value="high">
-                            </button>
+                    <!-- sizew slector and bg mode container -->
+                    <div class = "SS-BGM-container">
+                        <!-- ######### Size Selector ######### -->
+                        <div class="size-selector">
+                            <label for="photoSize">Select ID Size</label>
+                            <select id="photoSize">
+                                <option value="1x1">1x1 inch</option>
+                                <option value="1.5x1.5">1.5 x 1.5 inch</option>
+                                <option value="2x2">2x2 inch</option>
+                                <option value="passport">Passport </option>
+                            </select>
+                        </div>
+                        
+                        <!-- ######### Background Removal Mode ######### -->
+                        <div class="bg-mode-section">
+                            <div class="bg-mode-header-row">
+                                <label class="bg-mode-label">Choose Background Removal Mode</label>
+                                <span class="bg-mode-info" aria-label="Background removal modes info">?</span>
+                            </div>
+                            <div class="bg-mode-grid" id="bgModeGrid">
+                                <button type="button" class="bg-mode-card bg-mode-selected" role="radio" aria-pressed="true" data-mode="fast"
+                                    id="bgModeFast" onclick=>
+                                    <div class="bg-mode-header">
+                                        <span class="bg-mode-title">Fast Removal</span>
+                                    </div>
+                                    <input type="hidden" name="bgMode" value="fast">
+                                </button>
+                                <button type="button" class="bg-mode-card" role="radio" aria-pressed="false" data-mode="high" id="bgModeHigh">
+                                    <div class="bg-mode-header">
+                                        <span class="bg-mode-title">High-Quality Removal</span>
+                                    </div>
+                                    <input type="hidden" name="bgMode" value="high">
+                                </button>
+                            </div>
                         </div>
                     </div>
-
+                
                     <!-- ######### Process & Change Image Buttons ######### -->
                     <div class="buttons buttons-left">
                         <button type="button" class="change-image" id="change-image-button">Change Image</button>
