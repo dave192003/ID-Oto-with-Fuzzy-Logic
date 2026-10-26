@@ -1,0 +1,181 @@
+:root {
+    --primary: #0081d6;
+    --primary-hover: #006bb3;
+    --background: linear-gradient(135deg, #ffffff 0%, #a6d1fd 50%, #3498db 100%);
+    --card-bg: #eefcff;
+    --shadow:
+        0 4px 8px rgba(0, 0, 0, 0.04),
+        0 12px 24px rgba(0, 0, 0, 0.06),
+        0 24px 48px rgba(0, 0, 0, 0.08);
+}
+
+/*  RESET & BASE ELEMENTS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--background);
+    color: #0c0c0c;
+    user-select: none;
+}
+
+img {
+    width: 100%;
+    height: clamp(220px, 35vw, 350px);
+    object-fit: contain;
+    background: #ffffff;
+}
+
+/* File inputs stay hidden — their styled <label> triggers them */
+input {
+    display: none;
+}
+
+main {
+    width: 100%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/*  NAVBAR (shared) */
+.navBar-container {
+    grid-column: 1 / -1;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+}
+
+.navBar-container h2 {
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    color: white;
+    background: var(--primary);
+    padding: .8rem 1.8rem;
+    border-radius: 999px;
+    transition: .3s;
+}
+
+.navBar-container h2:hover {
+    background: var(--primary-hover);
+}
+
+.nav-box ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    gap: clamp(20px, 20vw, 30px);
+}
+
+.nav-box li {
+    font-size: clamp(15px, 2vw, 20px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.nav-box li:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.nav-box a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* FOOTER (shared)*/
+.footer-container {
+    grid-column: 1/ -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: clamp(100px, 50vw, 200px);
+    width: 100%;
+}
+
+.footer-container p {
+    font-size: clamp(15px, 10vw, 15px);
+    color: rgba(255, 255, 255, 0.692);
+    margin: 1rem;
+}
+
+/* ANIMATIONS (shared keyframes)
+   Entrance rules use animation-fill-mode: backwards so that
+   hover/active transforms still work after they finish. */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoom-in {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Smooth entrance for the shared navbar (all pages) */
+.navBar-container {
+    animation: fade-in-down 0.45s ease backwards;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

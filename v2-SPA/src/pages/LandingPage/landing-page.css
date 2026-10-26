@@ -1,0 +1,174 @@
+/* ########## LANDING PAGE HEADER ########## */
+
+.left-section {
+    padding: 0 0 0 5rem;
+}
+
+/* Header layout */
+.left-section .header-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    animation: fade-in-up 0.6s 0.05s ease backwards;
+}
+
+/* ########## MARQUEE BADGES ########## */
+
+.top-header-container {
+    width: clamp(50px, 55vw, 500px);
+    background: white;
+    padding: 0.5rem 0;
+    border-radius: 50px;
+    margin-bottom: 3rem;
+    border: 1px dashed rgba(0, 0, 255, 0.479);
+    overflow: hidden;
+}
+
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 12s linear infinite;
+}
+
+.marquee-group {
+    display: flex;
+    flex-shrink: 0;
+    gap: clamp(20px, 4vw, 40px);
+    padding-right: clamp(20px, 4vw, 40px);
+}
+
+.marquee-item {
+    white-space: nowrap;
+    font-size: clamp(8px, 3vw, 25px);
+    color: rgba(0, 89, 255, 0.979);
+    font-weight: bold;
+}
+
+/* Pause animation on hover */
+.top-header-container:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+/* Marquee animation */
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* ########## MAIN TITLE ########## */
+
+.header-container .name-header {
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 0.95;
+    color: rgb(43, 41, 131);
+    margin-bottom: 0.4rem;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Subtitle */
+.header-container h2 {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: rgba(67, 67, 82, 0.65);
+}
+
+/* Tagline */
+.header-container h3 {
+    margin-top: 1rem;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: rgb(67, 67, 82);
+}
+
+/* Highlighted EASIER text */
+.header-container .easier {
+    color: var(--primary);
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    -webkit-text-stroke: 1px var(--primary);
+}
+
+/* Description */
+.header-container .info-header {
+    display: flex;
+    flex-wrap: wrap;
+    color: rgba(87, 87, 87, 0.644);
+    font-size: clamp(0.8rem, 1vw, 1.2rem);
+    padding: 0.3rem 0;
+}
+
+/* ########## RESPONSIVE DESIGN ########## */
+
+@media (max-width: 1024px) {
+    .left-section {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .left-section {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem !important;
+    }
+
+    .top-header-container {
+        width: min(100%, 500px);
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .left-section {
+        padding: 1.25rem !important;
+    }
+
+    .header-container .name-header {
+        font-size: clamp(2.5rem, 12vw, 3.5rem);
+    }
+
+    .header-container h2 {
+        font-size: 1rem;
+    }
+
+    .header-container h3 {
+        font-size: 1rem;
+    }
+
+    .header-container .info-header {
+        font-size: 0.9rem;
+    }
+
+    .top-header-container {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ########## REQUIRED ANIMATION ########## */
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+    .marquee-track,
+    .left-section .header-container {
+        animation: none;
+    }
+}

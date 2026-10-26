@@ -47,7 +47,7 @@ def enhance_image(img, parameters):
 
     # 1. Limit denoising to preserve facial details.
     denoise_strength = float(
-        np.clip(parameters["denoise"], 0.0, 2.0)
+        np.clip(parameters["denoise"], 0.0, 2.5)
     )
 
     denoised = cv2.fastNlMeansDenoisingColored(
@@ -56,12 +56,12 @@ def enhance_image(img, parameters):
         denoise_strength,
         denoise_strength,
         7,
-        21
+        23
     )
 
     # 2. Apply mild sharpening.
     sharpen_strength = float(
-        np.clip(parameters["sharpen"], 0.0, 0.5)
+        np.clip(parameters["sharpen"], 0.0, 0.8)
     )
 
     blurred = cv2.GaussianBlur(
@@ -80,10 +80,10 @@ def enhance_image(img, parameters):
 
     # 3. Keep brightness and contrast nearly neutral.
     alpha = float(
-        np.clip(parameters["alpha"], 0.98, 2.03)
+        np.clip(parameters["alpha"], 0.99, 2.05)
     )
     beta = float(
-        np.clip(parameters["beta"], -2.0, 3.0)
+        np.clip(parameters["beta"], -2.0, 3.1)
     )
 
     enhanced = cv2.convertScaleAbs(
