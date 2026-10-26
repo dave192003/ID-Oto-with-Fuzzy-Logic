@@ -1,5 +1,4 @@
-import "./landing-page.css";
-import NavBar from "../../components/navBar/navBar";
+﻿import "./landing-page.css";
 // icons and images imports
 import Arrow from "../../assets/resources/icons/arrow.png";
 import Crop from "../../assets/resources/icons/crop.png";
@@ -18,7 +17,6 @@ function LandingPage() {
     return (
         <>
             {/* Left Section */}
-            <NavBar />
             <section className="left-section">
                 <header className="header-container">
                     <div className="top-header-container">
@@ -61,7 +59,7 @@ function LandingPage() {
                             <h2>Upload Your Photo</h2>
                             <p className="upload-description">Drag &amp; drop or click to upload</p>
                             <span className="choose-file-btn">Choose File</span>
-                            <p className="file-info">JPG, PNG or JPEG • Max size 10MB</p>
+                            <p className="file-info">JPG, PNG or JPEG â€¢ Max size 10MB</p>
                         </label>
                         <input
                             type="file"
@@ -74,49 +72,48 @@ function LandingPage() {
                     <div className="privacy-info-container">
                         <p>Your photos are secure and private. They are not stored.</p>
                     </div>
-
-                    {/* RIGHT SECTION */}
-
-                    <section className="right-section">
-                        <div className="hero-image-container">
-                            <img src = {Image} className ="image1" alt="Original photo" />
-                            <img src= {Arrow} className ="arrow" alt="Arrow" />
-                            <img src= {IDs} className ="image2" alt="ID photo" />
-                        </div>
-                    </section>
-
-                    <section className ="feature-info-section">
-                        <div className ="box">
-                        <img src = {MagicWand}alt="Background removal" />
-                            <h3>Auto Background Removal</h3>
-                        </div>
-
-                        <div className ="box">
-                            <img src= {Crop} alt="Cropping" />
-                            <h3>Smart Cropping</h3>
-                        </div>
-
-                        <div className ="box">
-                            <img src = {Magic} alt="Enhancement" />
-                            <h3>Auto Enhance</h3>
-                        </div>
-
-                        <div className ="box">
-                            <img src= {Dashboard} alt="Layout" />
-                            <h3>Auto Layout</h3>
-                        </div>
-
-                        <div className ="box">
-                            <img src= {Printer} alt="Printing" />
-                            <h3>Print Ready</h3>
-                        </div>
-
-                    </section>
-
                 </header>
+            </section>
+
+            {/* Right Section */}
+            <section className="right-section">
+                <div className="hero-image-container">
+                    <img src={Image} className="image1" alt="Original photo" />
+                    <img src={Arrow} className="arrow" alt="Arrow" />
+                    <img src={IDs} className="image2" alt="ID photo" />
+                </div>
+            </section>
+
+            <section className="feature-info-section">
+                <div className="box">
+                    <img src={MagicWand} alt="Background removal" />
+                    <h3>Auto Background Removal</h3>
+                </div>
+
+                <div className="box">
+                    <img src={Crop} alt="Cropping" />
+                    <h3>Smart Cropping</h3>
+                </div>
+
+                <div className="box">
+                    <img src={Magic} alt="Enhancement" />
+                    <h3>Auto Enhance</h3>
+                </div>
+
+                <div className="box">
+                    <img src={Dashboard} alt="Layout" />
+                    <h3>Auto Layout</h3>
+                </div>
+
+                <div className="box">
+                    <img src={Printer} alt="Printing" />
+                    <h3>Print Ready</h3>
+                </div>
             </section>
         </>
     );
 }
 
 export default LandingPage;
+
+

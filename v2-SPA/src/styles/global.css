@@ -28,7 +28,7 @@ img {
     width: 100%;
     height: clamp(220px, 35vw, 350px);
     object-fit: contain;
-    background: #ffffff;
+    background: transparent;
 }
 
 /* File inputs stay hidden — their styled <label> triggers them */
