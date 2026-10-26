@@ -172,3 +172,149 @@
         animation: none;
     }
 }
+
+/* upload area */
+/* ########## UPLOAD AREA ########## */
+.upload-area {
+    grid-column: 1;
+    width: 100%;
+    padding: 1rem;
+    justify-self: start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    animation: fade-in-up 0.6s 0.15s ease backwards;
+}
+
+.upload-area.done {
+    display: none;
+}
+
+/* Upload Card */
+.upload-area .upload-card {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    border: 2px dashed var(--primary);
+    border-radius: 15px;
+    background: rgba(217, 236, 248, 0.664);
+    text-align: center;
+    cursor: pointer;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.upload-area .upload-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-hover);
+    box-shadow: 0 12px 24px rgba(0, 129, 214, 0.18);
+}
+
+.upload-area .upload-card:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: 0 4px 10px rgba(0, 129, 214, 0.15);
+}
+
+/* Upload Icon */
+.upload-area .upload-icon {
+    width: 4rem;
+    height: 100px;
+}
+
+.upload-area .upload-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: transparent;
+}
+
+/* Upload Heading */
+.upload-area .upload-card h2 {
+    font-size: 2rem;
+    color: #222;
+}
+
+/* Upload Description */
+.upload-area .upload-description {
+    font-size: 1rem;
+    color: #6d6d6d;
+}
+
+/* Choose File Button */
+.upload-area .choose-file-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 4rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 12px;
+    font-size: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
+    box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.12),
+        0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.upload-area .choose-file-btn:hover {
+    background: var(--primary-hover);
+    transform: scale(1.05);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.16),
+        0 14px 30px rgba(0, 0, 0, 0.16);
+}
+
+/* Pressed Effect */
+.upload-area .choose-file-btn:active {
+    background: var(--primary-hover);
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition-duration: 0.08s;
+}
+
+/* File Information */
+.upload-area .file-info {
+    color: #7a7a7a;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .upload-area {
+        padding: 0.75rem;
+        border-radius: 20px;
+    }
+
+    .upload-area .upload-card {
+        padding: 1rem 0.75rem;
+    }
+
+    .upload-area .upload-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .upload-area .choose-file-btn {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        font-size: 1.25rem;
+    }
+
+    .upload-area .file-info {
+        font-size: 0.9rem;
+    }
+}

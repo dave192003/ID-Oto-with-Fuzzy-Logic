@@ -37,6 +37,30 @@ function LandingPage() {
               background, crop, and generate ID photos for you.
             </p>
           </div>
+
+          {/* UPLOAD AREA */}
+            <div className ="upload-area" id="uploadArea">
+                <label for="imageInput" className="upload-card" id="file-input">
+                    <div className ="upload-icon">
+
+                    </div>
+                    <h2>Upload Your Photo</h2>
+                    <p className ="upload-description">Drag &amp; drop or click to upload</p>
+                    <span className ="choose-file-btn">Choose File</span>
+                    <p className ="file-info">JPG, PNG or JPEG • Max size 10MB</p>
+                </label>
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/png,image/jpeg,image/jpg"
+                    hidden
+                />
+            </div>
+
+            <div className ="privacy-info-container">
+                <p>Your photos are secure and private. They are not stored.</p>
+            </div>
+
         </header>
       </section>
     </>
