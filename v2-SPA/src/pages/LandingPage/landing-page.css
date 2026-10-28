@@ -475,6 +475,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    gap: 1rem;
     padding: 0.5rem 1rem;
     text-align: center;
     animation: fade-in 0.9s 0.3s ease backwards;
@@ -482,9 +483,13 @@
 
 .privacy-info-container p {
     margin: 0;
-    color: #64748b;
-    font-size: clamp(12px, 1.2vw, 14px);
+    color: #0b3b7e;
+    font-size: clamp(12px, 1.2vw, 16px);
     line-height: 1.6;
+}
+
+.privacy-info-container img{
+    width: 1rem;
 }
 
 /* ########## RESPONSIVE DESIGN ########## */
