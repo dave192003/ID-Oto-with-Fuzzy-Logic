@@ -384,7 +384,7 @@
     gap: 1rem;
     margin: 1rem;
     justify-content: space-between;
-    padding: 0 3rem;
+    padding: 1rem 3rem;
     border: 1px solid white;
     background: rgba(255, 255, 255, 0.493);
     justify-self: center;
@@ -426,12 +426,13 @@
 }
 
 .feature-info-section .box h3 {
-    font-size: clamp(7px, 3vw, 17px);
+    font-size: clamp(7px, 1.5vw, 17px);
     color: rgba(0, 68, 255, 0.685);
 }
 
 .feature-info-section .box img {
     background: transparent;
+    height: auto;
     width: clamp(15px, 10vw, 30px);
     transition: transform 0.3s ease;
 }
@@ -496,11 +497,4 @@
     .privacy-info-container p {
         font-size: 12px;
     }
-
-    /* .feature-info-section{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    } */
-
-
 }
