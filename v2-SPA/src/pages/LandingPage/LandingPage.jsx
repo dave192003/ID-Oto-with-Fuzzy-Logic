@@ -112,6 +112,10 @@ function LandingPage() {
                     <h3>Print Ready</h3>
                 </div>
             </section>
+
+            <footer class="footer-container">
+                <p>&copy; 2026 Dave Daryl Lebico. All Rights Reserved.</p>
+            </footer>
         </main>
     );
 }
