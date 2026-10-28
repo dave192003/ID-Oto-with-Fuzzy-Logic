@@ -104,7 +104,8 @@
     flex-wrap: wrap;
     color: rgba(87, 87, 87, 0.644);
     font-size: clamp(0.8rem, 1vw, 1.2rem);
-    padding: 0.3rem 0;
+    padding: 0.4rem 0;
+    margin-bottom: 1rem;
 }
 
 /* ########## RESPONSIVE DESIGN ########## */
@@ -245,6 +246,7 @@
 
 /* Choose File Button */
 .upload-area .choose-file-btn {
+    position: relative;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -282,9 +284,10 @@
 
 /* File Information */
 .upload-area .file-info {
-    color: #7a7a7a;
+    color: #636363;
     font-size: 1.1rem;
 }
+
 
 /* Responsive */
 @media (max-width: 600px) {
@@ -378,6 +381,43 @@
     flex-wrap: wrap !important;
     border-radius: 30px;
     animation: fade-in-up 0.6s 0.25s ease backwards;
+}
+
+/* bubble */
+/* bubble hove */
+#hv-tip-1 {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 14px);
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: #080c14;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(.85);
+    transform-origin: 50% 100%;
+    transition: opacity .2s ease, transform .45s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+#hv-tip-1::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    border: 7px solid transparent;
+    border-top-color: #080c14;
+    transform: translateX(-50%);
+}
+
+.box:hover #hv-tip-1,
+.box:focus-visible #hv-tip-1 {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0) scale(1);
 }
 
 .feature-info-section .box {
