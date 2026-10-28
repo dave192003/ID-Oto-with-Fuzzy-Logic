@@ -11,9 +11,11 @@ import Printer from "../../assets/resources/icons/printer.png";
 import IDs from "../../assets/resources/images/id-photo.png";
 import Image from "../../assets/resources/images/images.jpg";
 // import NoBGImage from "../../assets/resources/images/imgBG.jpg";
-
+import {useState} from "react";
 
 function LandingPage() {
+    const [buttonText, setButtonText] = useState("Choose file");
+
     return (
         <main className = "landing-page-main">
             {/* Left Section */}
@@ -52,13 +54,13 @@ function LandingPage() {
 
                     {/* UPLOAD AREA */}
                     <div className="upload-area" id="uploadArea">
-                       <label htmlFor="imageInput" className="upload-card" id="file-input">
+                       <label htmlFor="imageInput" className="upload-card" id="file-input" >
                             <div className="upload-icon">
                                 <img src = {imageUpload} />
                             </div>
                             <h2>Upload Your Photo </h2>
                             <p className="upload-description">Drag &amp; drop or click to upload</p>
-                            <span className="choose-file-btn">Choose File </span>
+                            <span className="choose-file-btn">{buttonText}</span>
                             <p className="file-info">JPG, PNG or JPEG (Max size 10MB)</p>
                         </label>
                         <input
@@ -66,7 +68,18 @@ function LandingPage() {
                             id="imageInput"
                             accept="image/png,image/jpeg,image/jpg"
                             hidden
+                            onClick = {() => setButtonText("Choosing File...")}
+                            onChange = {(event) => {
+                                if(event.target.files?.length){
+                                    setButtonText("Choose File");
+                                }
+                            }}
+
+                            onCancel = {() => {
+                                setButtonText("Choose File");
+                            }}
                         />
+                        
                     </div>
 
                     <div className="privacy-info-container">
