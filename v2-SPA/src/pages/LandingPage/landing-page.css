@@ -113,20 +113,7 @@
     .left-section {
         display: flex;
         flex-direction: column;
-        padding: 2rem !important;
-    }
-}
-
-@media (max-width: 768px) {
-    .left-section {
-        display: flex;
-        flex-direction: column;
-        padding: 2rem !important;
-    }
-
-    .top-header-container {
-        width: min(100%, 500px);
-        margin-bottom: 2rem;
+        /* padding: 2rem !important; */
     }
 }
 
