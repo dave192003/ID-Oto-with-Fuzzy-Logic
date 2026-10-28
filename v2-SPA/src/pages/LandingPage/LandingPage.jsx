@@ -71,7 +71,7 @@ function LandingPage() {
 
                     <div className="privacy-info-container">
                         <img src = {Lock} />
-                        <p>Your photos are secure and private. They are not stored.</p>
+                        <p>Photos are secure and private. They are not stored.</p>
                     </div>
                 </header>
             </section>
