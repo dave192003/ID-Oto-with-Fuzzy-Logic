@@ -15,7 +15,7 @@ import Image from "../../assets/resources/images/images.jpg";
 
 function LandingPage() {
     return (
-        <>
+        <main className = "landing-page-main">
             {/* Left Section */}
             <section className="left-section">
                 <header className="header-container">
@@ -52,14 +52,14 @@ function LandingPage() {
 
                     {/* UPLOAD AREA */}
                     <div className="upload-area" id="uploadArea">
-                        <label for="imageInput" className="upload-card" id="file-input">
+                       <label htmlFor="imageInput" className="upload-card" id="file-input">
                             <div className="upload-icon">
 
                             </div>
                             <h2>Upload Your Photo</h2>
                             <p className="upload-description">Drag &amp; drop or click to upload</p>
                             <span className="choose-file-btn">Choose File</span>
-                            <p className="file-info">JPG, PNG or JPEG â€¢ Max size 10MB</p>
+                            <p className="file-info">JPG, PNG or JPEG (Max size 10MB)</p>
                         </label>
                         <input
                             type="file"
@@ -110,7 +110,7 @@ function LandingPage() {
                     <h3>Print Ready</h3>
                 </div>
             </section>
-        </>
+        </main>
     );
 }
 
