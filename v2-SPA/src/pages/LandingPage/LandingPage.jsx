@@ -56,9 +56,9 @@ function LandingPage() {
                             <div className="upload-icon">
 
                             </div>
-                            <h2>Upload Your Photo</h2>
+                            <h2>Upload Your Photo </h2>
                             <p className="upload-description">Drag &amp; drop or click to upload</p>
-                            <span className="choose-file-btn">Choose File</span>
+                            <span className="choose-file-btn">Choose File </span>
                             <p className="file-info">JPG, PNG or JPEG (Max size 10MB)</p>
                         </label>
                         <input
@@ -88,6 +88,7 @@ function LandingPage() {
                 <div className="box">
                     <img src={MagicWand} alt="Background removal" />
                     <h3>Auto Background Removal</h3>
+                    <span role="tooltip" id="hv-tip-1">Remove the background of image automatically.</span>
                 </div>
 
                 <div className="box">
