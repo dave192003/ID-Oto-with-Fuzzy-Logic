@@ -3,10 +3,10 @@
 import Arrow from "../../assets/resources/icons/arrow.png";
 import Crop from "../../assets/resources/icons/crop.png";
 import Dashboard from "../../assets/resources/icons/dashboard.png";
-// import imageUpload from "../../assets/resources/icons/image-.png";
+import imageUpload from "../../assets/resources/icons/image-.png";
 import MagicWand from "../../assets/resources/icons/magic-wand.png";
 import Magic from "../../assets/resources/icons/magic.png";
-// import Lock from "../../assets/resources/icons/padlock.png";
+import Lock from "../../assets/resources/icons/padlock.png";
 import Printer from "../../assets/resources/icons/printer.png";
 import IDs from "../../assets/resources/images/id-photo.png";
 import Image from "../../assets/resources/images/images.jpg";
@@ -54,7 +54,7 @@ function LandingPage() {
                     <div className="upload-area" id="uploadArea">
                        <label htmlFor="imageInput" className="upload-card" id="file-input">
                             <div className="upload-icon">
-
+                                <img src = {imageUpload} />
                             </div>
                             <h2>Upload Your Photo </h2>
                             <p className="upload-description">Drag &amp; drop or click to upload</p>
@@ -70,6 +70,7 @@ function LandingPage() {
                     </div>
 
                     <div className="privacy-info-container">
+                        <img src = {Lock} />
                         <p>Your photos are secure and private. They are not stored.</p>
                     </div>
                 </header>
